@@ -122,9 +122,15 @@ function parse_obj() {
 				#region Get textures.
 				var block_texture_json = ds_map_find_value(global.block_textures, string_replace(current_block_name, "dungeonmaster:LEVELNAME/", ""))
 			
-				if block_texture_json != undefined {
-				
-				var block_texture_json = ds_map_find_value(block_texture_json, "textures")
+				if block_texture_json != undefined {	
+					
+					if ds_map_find_value(block_texture_json, "blockshape") != undefined {
+						if ds_map_find_value(block_texture_json, "blockshape") = "cross_texture" block_type = "cross"
+						}
+					
+					var block_texture_json = ds_map_find_value(block_texture_json, "textures")
+					
+					
 				
 				if is_string(block_texture_json) {
 				
@@ -136,6 +142,8 @@ function parse_obj() {
 					var south = block_texture_json
 					var east = block_texture_json
 					var west = block_texture_json
+					
+					var texture_all = block_texture_json
 					
 					} else {
 						//Placeholder textures
@@ -170,13 +178,20 @@ function parse_obj() {
 					
 						//Just incase the block has a suffix that isn't in a texture
 						if !file_exists(global.dataDirectory + "\\resourcepacks\\" + global.current_resource_pack + "\\images\\blocks\\" + texture_all + ".png") {
-							var texture_all_temp = string_replace(texture_all, "_slab", "")
-							var texture_all_temp = string_replace(texture_all, "_path", "")
 							
-							//If it still doesn't exist v
-							if !file_exists(global.dataDirectory + "\\resourcepacks\\" + global.current_resource_pack + "\\images\\blocks\\" + texture_all_temp + ".png") then texture_all_temp = texture_all + "_top"
+							if !file_exists(global.dataDirectory + "\\resourcepacks\\" + global.current_resource_pack + "\\images\\blocks\\" + texture_all + "_top.png") {
+							
+							var texture_all_temp = string_replace(texture_all, "_slab", "")
+							var texture_all_temp = string_replace(texture_all_temp, "_path", "")
+							
 							
 							texture_all = texture_all_temp
+							}
+							
+							//If it still doesn't exist v
+							//if !file_exists(global.dataDirectory + "\\resourcepacks\\" + global.current_resource_pack + "\\images\\blocks\\" + texture_all_temp + ".png") then texture_all_temp = texture_all + "_top"
+							
+							
 							}
 					
 						var up = texture_all
@@ -200,10 +215,26 @@ function parse_obj() {
 						var block_type = "path"
 						var template_model = global.dataDirectory + "\\models\\block\\j_template_path.json"
 						
+						if !file_exists(global.dataDirectory + "\\resourcepacks\\" + global.current_resource_pack + "\\images\\blocks\\" + up + ".png") up = up + "_top"
+						if !file_exists(global.dataDirectory + "\\resourcepacks\\" + global.current_resource_pack + "\\images\\blocks\\" + side + ".png") side = side + "_side"
+						if !file_exists(global.dataDirectory + "\\resourcepacks\\" + global.current_resource_pack + "\\images\\blocks\\" + down + ".png") down = down + "_side"
 					
 						textfile_copy_replace(template_model, "%top%",  up, template_model_out)
 						textfile_copy_replace(template_model_out, "%side%", side, template_model_out)
 						textfile_copy_replace(template_model_out, "%bottom%", down, template_model_out)
+					
+					
+					#endregion
+					}
+					
+				if string_pos("flower", current_block_name) > 0 or block_type = "cross" {
+					#region Cross type blocks
+					
+						var block_type = "flower"
+						var template_model = global.dataDirectory + "\\models\\block\\j_template_cross.json"
+						
+					
+						textfile_copy_replace(template_model, "%texture_all%",  texture_all, template_model_out)
 					
 					
 					#endregion
@@ -278,6 +309,7 @@ function parse_obj() {
 						textfile_copy_replace(template_model_out, "%south%", south, template_model_out)
 					#endregion
 					}
+					
 				
 				//data\resourcepacks\squidcoast\blocks.json has up, down, side etc textures.
 				//use it 

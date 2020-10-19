@@ -60,6 +60,10 @@ function mc2obj_check_transparent(xoffset, yoffset, zoffset) {
 			block_sur_c = block_sur_c[? "Name"]
 		
 			returne = 0
+			
+			if string_pos("slab", block_sur_c) > 0 return 1
+			if string_pos("flower", block_sur_c) > 0 return 1
+			if string_pos("path", block_sur_c) > 0 return 1
 		
 			switch(block_sur_c) {
 				case "minecraft:air": var returne = 1; break;
@@ -73,6 +77,10 @@ function mc2obj_check_transparent(xoffset, yoffset, zoffset) {
 				case "minecraft:jungle_fence": var returne = 1; break;
 				case "minecraft:acacia_fence": var returne = 1; break;
 				case "minecraft:chorus_flower": var returne = 1; break;
+				
+				case "dungeonmaster:LEVELNAME/flower_rose": var returne = 1; break;
+				case "dungeonmaster:LEVELNAME/flower_oxeye_daisy": var returne = 1; break;
+				case "dungeonmaster:LEVELNAME/tallgrass": var returne = 1; break;
 			
 				}
 		//debug_log("MC2OBJ", "Deleted block '" + block_sur_c + "'")
