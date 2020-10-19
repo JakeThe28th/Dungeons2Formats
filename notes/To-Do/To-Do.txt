@@ -1,0 +1,31 @@
+//write blocks and states directly to NBT? Less memory usage.
+//re-organize code. Create GUI functions and use those to save space in the object structure
+
+Add 4 buttons, and an import switch
+
+Export to NBT | Export to Schematic
+Export to World | Export to JMC2OBJ
+
+Export to .obj
+- Get blocks
+- Create vertex for blocks based on json model
+- Create sprite sheet and write texture coords
+	(create face of cube, create texture coords for face, make it a face, repeat)
+	
+" from: Start point of a cube according to the scheme [x, y, z]. Values must be between -16 and 32.
+ to: Stop point of a cube according to the scheme [x, y, z]. Values must be between -16 and 32. "
+ 
+Divide cube into north/east/west/south planes. can use remove doubles later iin blender.
+
+example: 
+	x1 y1 z1 = corner 1
+	x2 y2 z2 = corner 2
+	x1-y1-z1  x1-y2-z1  x2-y2-z1  x2-y1-z1
+	same z, but a plane on x and y.
+	
+	order the y coordinates by height
+	and the x/z coordinates by x<x1
+	
+	up = x1-y2-z1 x2-y2-z1 x2-y2-z2 x1-y2-z1
+	
+	switch(faces) { "up" "down" "etc" }
