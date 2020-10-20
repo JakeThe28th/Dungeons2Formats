@@ -20,6 +20,7 @@
     {"id":{"name":"gzunzip","path":"scripts/gzunzip/gzunzip.yy",},"order":1,},
     {"id":{"name":"lib_gz","path":"scripts/lib_gz/lib_gz.yy",},"order":2,},
     {"id":{"name":"write_tag_compound","path":"scripts/write_tag_compound/write_tag_compound.yy",},"order":0,},
+    {"id":{"name":"mc2obj_build_obj_at","path":"scripts/mc2obj_build_obj_at/mc2obj_build_obj_at.yy",},"order":16,},
     {"id":{"name":"write_tag_list","path":"scripts/write_tag_list/write_tag_list.yy",},"order":1,},
     {"id":{"name":"write_tag_string","path":"scripts/write_tag_string/write_tag_string.yy",},"order":2,},
     {"id":{"name":"write_tag_byte_array","path":"scripts/write_tag_byte_array/write_tag_byte_array.yy",},"order":3,},
@@ -122,6 +123,7 @@
     {"CopyToMask":-1,"filePath":"datafiles","resourceVersion":"1.0","name":"7z1900-extra.zip","resourceType":"GMIncludedFile",},
     {"CopyToMask":-1,"filePath":"datafiles","resourceVersion":"1.0","name":"file.dll","resourceType":"GMIncludedFile",},
     {"CopyToMask":-1,"filePath":"datafiles","resourceVersion":"1.0","name":"credit.txt","resourceType":"GMIncludedFile",},
+    {"CopyToMask":-1,"filePath":"datafiles","resourceVersion":"1.0","name":"leaves.obj","resourceType":"GMIncludedFile",},
   ],
   "MetaData": {
     "IDEVersion": "2.3.0.529",

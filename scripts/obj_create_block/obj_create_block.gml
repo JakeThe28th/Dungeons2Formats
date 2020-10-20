@@ -272,6 +272,8 @@ function obj_create_block(ds_map, buffer, v_count, vt_count, surrounding, mtl, m
 				buffer_write(buffer, buffer_text, "usemtl " + ds_map_find_value(mat_map, mat))
 				buffer_write(buffer, buffer_text, chr($000D) + chr($000A))
 				
+				buffer_write(buffer, buffer_text, "g " + current_block_name)
+				buffer_write(text_file_buffer, buffer_text, chr($000D) + chr($000A))
 			
 				//Create vertices
 				switch (current_face) {

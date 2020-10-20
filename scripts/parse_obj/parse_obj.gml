@@ -193,6 +193,7 @@ function parse_obj() {
 							
 							
 							}
+						
 					
 						var up = texture_all
 						var down = texture_all
@@ -202,6 +203,9 @@ function parse_obj() {
 						var south = texture_all
 						var east = texture_all
 						var west = texture_all
+						
+						
+						if file_exists(global.dataDirectory + "\\resourcepacks\\" + global.current_resource_pack + "\\images\\blocks\\" + up + "_top.png") up = up + "_top"
 					
 						
 					
@@ -388,6 +392,49 @@ function parse_obj() {
 				} else {
 			blocks_created++
 			obj_create_block(ds, text_file_buffer, vertice_count, vertice_texture_count, bds, mtloutput, mat_map, dungeons_id)
+			
+			if string_pos("leaves", current_block_name) > 0 {
+				var leaf_id = string_replace(current_block_name, "dungeonmaster:LEVELNAME/", "") + "_outer"
+				if !ds_map_exists(mat_map, leaf_id) {
+				ds_map_add(mat_map, leaf_id, leaf_id)
+				#region mtl nonsense
+				file_text_write_string(mtloutput, "newmtl " + leaf_id)
+				file_text_writeln(mtloutput)
+				file_text_write_string(mtloutput, "# Ns 0")
+				file_text_writeln(mtloutput)
+				file_text_write_string(mtloutput, "# Ka 0.2 0.2 0.2")
+				file_text_writeln(mtloutput)
+				file_text_write_string(mtloutput, "Kd 1 1 1")
+				file_text_writeln(mtloutput)
+				file_text_write_string(mtloutput, "Ks 0 0 0")
+				file_text_writeln(mtloutput)
+				file_text_write_string(mtloutput, "# map_Ka " + "resourcepacks\\" + global.current_resource_pack + "\\images\\blocks\\" + leaf_id + ".png")
+				file_text_writeln(mtloutput)
+				file_text_write_string(mtloutput, "# for G3D, to make textures look blocky:")
+				file_text_writeln(mtloutput)
+				file_text_write_string(mtloutput, "interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION")
+				file_text_writeln(mtloutput)
+				file_text_write_string(mtloutput, "map_Kd " + "resourcepacks\\" + global.current_resource_pack + "\\images\\blocks\\" + leaf_id + ".png")
+				file_text_writeln(mtloutput)
+				file_text_write_string(mtloutput, "# illum 2")
+				file_text_writeln(mtloutput)
+				file_text_write_string(mtloutput, "# d 1")
+				file_text_writeln(mtloutput)
+				file_text_write_string(mtloutput, "# Tr 0")
+				file_text_writeln(mtloutput)
+				file_text_writeln(mtloutput)
+				file_text_writeln(mtloutput)
+				#endregion
+					}
+					
+				buffer_write(text_file_buffer, buffer_text, "usemtl " + ds_map_find_value(mat_map, leaf_id))
+				buffer_write(text_file_buffer, buffer_text, chr($000D) + chr($000A))
+				
+				buffer_write(text_file_buffer, buffer_text, "g leaves_outer")
+				buffer_write(text_file_buffer, buffer_text, chr($000D) + chr($000A))
+				
+				mc2obj_build_obj_at("leaves.obj",text_file_buffer,x_lines_done, y_lines_done, z_lines_done)
+				}
 			}
 			
 			ds_map_destroy(ds)
