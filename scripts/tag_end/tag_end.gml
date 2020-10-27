@@ -1,5 +1,0 @@
-function tag_end() {
-
-
-
-}

@@ -1,5 +1,0 @@
-function generate_schematic() {
-
-
-
-}

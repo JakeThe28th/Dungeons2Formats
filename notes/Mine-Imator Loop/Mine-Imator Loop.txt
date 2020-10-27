@@ -1,7 +1,0 @@
-loop through once to get all dungeons blocks java data 
-	create map of all blocks data
-	add key (dungeonmaster:block)
-	inside key add all of the states
-	next block
-	
-then we take that and add it to MI
