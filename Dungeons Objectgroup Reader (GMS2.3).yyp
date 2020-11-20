@@ -1,6 +1,7 @@
 {
   "resources": [
     {"id":{"name":"spr_check","path":"sprites/spr_check/spr_check.yy",},"order":0,},
+    {"id":{"name":"dng_levels_list","path":"scripts/dng_levels_list/dng_levels_list.yy",},"order":17,},
     {"id":{"name":"textfile_copy_replace","path":"scripts/textfile_copy_replace/textfile_copy_replace.yy",},"order":0,},
     {"id":{"name":"point_in_area","path":"scripts/point_in_area/point_in_area.yy",},"order":1,},
     {"id":{"name":"order_least_greatest","path":"scripts/order_least_greatest/order_least_greatest.yy",},"order":2,},

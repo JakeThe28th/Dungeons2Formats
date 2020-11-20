@@ -1,0 +1,70 @@
+Blocks - base64 > zlip > bytes, each byte is the block id in hex and the block positioning is based on what  position it is in the bytes
+Boundaries - Columns with a set height that you can't walk into
+Doors - The locations on the tile that can have doors connected to it which is setup with the other files too
+Height plane - usually just the height map of a tile, and the same as Region Y Plane
+Id - How it is called from the map.json
+Is leaky - ???
+Pos - the position in object groups are just the position of the tiles in the world where Mojang built them.
+Region plane - controls areas where players can walk + the minimap + something else. 
+Region Y plane - usually just the height map of a tile, and the same as Height Plane
+Regions - Locations and spaces for mob spawning, prop spawning and other things
+Size - The xSize ySize and zSize of the tile
+Tags - ??? (Possibly simmilar to jigsaw block target pools, tags used in generation?)
+Walkable plane - ??? but often unused
+Y - ???
+
+In the tile there is a size.
+In the objectgroup json.
+If size x is 15 then you count 15 bytes and move down to the next line.
+When you move the amount of lines equal to z size, you move up 1 Y and do the process again.
+
+When you get to the sizeX * sizeY * sizeZ byte in the blocks the block states start.
+Each byte in the block states section is 2 block states 4 bits ber block state.
+There is only 1 block state per block. It works like 1.12 block ids.
+For example 35:14 would be red wool.
+
+So that would mean there's only half as many bytes for blockstates than bytes for blocks theoretically?
+Yep
+aight. thank you so much
+np
+
+
+
+7/10/2020
+
+CCCodeToday at 3:39 PM
+I've finally figured out what the boundaries property in object groups does. It's surprisingly similar to what I thought it was when I first started looking into it, but also a bit different, which is why it took a while...
+
+It's a list of "boundaries", where each boundary is 8 bytes representing an invisible column that is defined by a point in space and a height. Players can't walk into these columns, they have solid walls. They can fall into them, though. They don't have a solid top or bottom, so you can't walk on top of a boundary.
+
+The 8 bytes are 4 16-bit integers: x, y, z, and height.
+
+
+CCCodeToday at 4:15 PM
+height-plane and region-y-plane are usually just the height map of a tile, they're dupes of each other in a lot of the vanilla tiles
+region-plane controls areas where players can walk + the minimap + something else. It's what usually stops players from being able to just walk off cliffs. Some of the values are kinda like "soft-boundaries", where you can't walk into it, but you can roll into the column
+I still have no idea what the walkable-plane property does
+
+
+So, for the region-plane, here are my notes on the values in it:
+
+0: Area where the player can walk that is displayed as such on the minimap. This is used for most areas that players can walk on.
+1: Area where the player can walk that is displayed as a wall on the minimap.
+2: Area that prevents players from walking into it that is displayed as a wall on the minimap. This is mostly used for big falls in the game.
+3: Seemingly identical to 0, but it is used for roofed areas in the game, like tunnels.
+4: seemingly identical to 2, but it is most used for walls and water with death triggers in the game.
+
+It's set up like a single layer of the blocks property, except without the data values at the end. Each byte is at a X,Z coordinate, and those ^ are the values that can be used
+I still need to figure out what makes 3 different from 0 and 4 different from 2
+height-plane, region-y-plane, walkable-plane all use the same format as region-plane, where each byte is a X,Z coordinate
+Because they are all just 2D, they can easily be put into the color channels in an image. Here's an image of the lobby001 tile where the red channel is the region-plane, the green channel is the region-y-plane and the blue channel is the walkable-plane
+
+[image]
+
+Also, I don't know why, but the heightmap in some of the vanilla tiles look like a mess
+Like, I don't know why there's a big rectangle covering most of this one
+
+Oh, and as far as I know, the position in object groups are just the position of the tiles in the world where Mojang built them. 
+I'm guessing it's just there to tell their importer where it should grab the tile info from.
+If you export all of the tiles in an object group at those positions it'll look something like this 
+https://drive.google.com/file/d/1HQeGK7sPtXQC381qUrz7JBVUAcGp6a1M/view?usp=sharing
