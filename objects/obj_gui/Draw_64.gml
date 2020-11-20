@@ -6,61 +6,36 @@ draw_rectangle_color(0, 0, vw, vh, color_bg, color_bg, color_bg, color_bg, false
 
 
 //Draw Loading bar.
-draw_rectangle_color(5, vh/24, vw-5, vh/16, color_box, color_box, color_box, color_box, false) 
-var loadbar_x = (loading_bar_done*(5 - vw-5))-(loading_bar_done*(5 - vw-5))-(loading_bar_done*(5 - vw-5))
-draw_rectangle_color(5, vh/24, loadbar_x, vh/16, color_loading_done, color_loading_done, color_loading_done, color_loading_done, false) 
+//draw_rectangle_color(5, vh/24, vw-5, vh/16, color_box, color_box, color_box, color_box, false) 
+//var loadbar_x = (loading_bar_done*(5 - vw-5))-(loading_bar_done*(5 - vw-5))-(loading_bar_done*(5 - vw-5))
+//draw_rectangle_color(5, vh/24, loadbar_x, vh/16, color_loading_done, color_loading_done, color_loading_done, color_loading_done, false) 
+gui_draw_element(5, vh/24, vw-5, vh/16, "MainLoader")
 
-draw_set_font(font0)
-if loading_bar_text_type = "small" draw_set_font(font1)
-draw_set_halign(fa_left)
-draw_set_valign(fa_bottom)
-draw_set_color(c_black)
-draw_text(5, vh/24-5, loading_bar_text)
-loading_bar_text_type = "normal"
-draw_set_font(font0)
+//draw_set_font(font0)
+//if loading_bar_text_type = "small" draw_set_font(font1)
+//draw_set_halign(fa_left)
+//draw_set_valign(fa_bottom)
+//draw_set_color(c_black)
+//draw_text(5, vh/24-5, loading_bar_text)
+//loading_bar_text_type = "normal"
+//draw_set_font(font0)
 
 //Draw Object array.
 draw_rectangle_color(5, (vh/16)+34, vw/3, vh-46, color_box, color_box, color_box, color_box, false)
 	
 		if selected_group !=0 {
-			var i = 0
-			var iy = 0
-			var max_string_length = 0
-			var surf = surface_create((vw/3-5), (vh-46)-((vh/16)+34))
-			surface_set_target(surf)
-			var surf_w = surface_get_width(surf)
-			//List the objects in the selected objectgroup
-			repeat ds_list_size(ds_map_find_value(selected_group, "objects")) {
-				
-				var xsize = json_get(selected_group, "objects", i, "size", 0)
-				var ysize = json_get(selected_group, "objects", i, "size", 1)
-				var zsize = json_get(selected_group, "objects", i, "size", 2)
-				
-				var size = xsize*ysize*zsize
-				
-				
-				if gui_button(0,  20*iy-scroll_percent, surf_w, (20*iy-scroll_percent)+20, color_darkbox, color_box, json_get(selected_group, "objects", i, "id") + string(" Size: " + string(size)), (vh/16+34), 5) = 2 selected_object = i
-				
-				if i = selected_object if gui_button(0,  20*iy-scroll_percent, surf_w, (20*iy-scroll_percent)+20, color_box, color_bg, json_get(selected_group, "objects", i, "id"), (vh/16+34), 5) = 2 selected_object = i
-				//If this is the current selected object, draw the background brighter
-			
-				if string_length(json_get(selected_group, "objects", i, "id") + string(" Size: " + string(size))) > max_string_length max_string_length = string_width(json_get(selected_group, "objects", i, "id"))
-	
-				iy++
-				i++
+		//json_get(selected_group, "objects", i, "id") + string(" Size: " + string(size))
+		
+		gui_draw_element(0, 0, 100, 1000, "SelGroup")
 				} 
 				
-			surface_reset_target()
-			draw_surface(surf, 5, vh/16+34)
-			surface_free(surf)
+
+			//if keyboard_check(vk_down) scroll_percent++
+			//if keyboard_check(vk_up) scroll_percent--
+			//scroll_percent = clamp(scroll_percent, 0, (20*iy))
 			
 			
-			if keyboard_check(vk_down) scroll_percent++
-			if keyboard_check(vk_up) scroll_percent--
-			scroll_percent = clamp(scroll_percent, 0, (20*iy))
-			
-			
-			}
+			//}
 		
 	#region Convert to string button
 	
@@ -97,7 +72,10 @@ draw_rectangle_color(5, (vh/16)+34, vw/3, vh-46, color_box, color_box, color_box
 			if mouse_check_button_released(mb_left) {
 				selected_group = json_get(level_json, "object-groups", i)
 				
-				selected_group = json_load(global.dataDirectory + "lovika\\objectgroups\\" + string_replace(selected_group, "/objectgroup", "") + "\\objectgroup.json")
+				selected_group = json_load(ma_lovika + "objectgroups\\" + string_replace(selected_group, "/objectgroup", "") + "\\objectgroup.json")
+				
+				if ds_map_exists(global.gui_ds, "SelGroup") ds_map_delete(global.gui_ds, "SelGroup")
+				gui_update_ds_list_multiple(ds_map_find_value(selected_group, "objects"), "none", c_aqua, c_lime, c_green, "SelGroup")
 				
 				scroll_percent = 0
 				//If it's clicked, set the selected group to corresponding json

@@ -1,7 +1,7 @@
 done = "initializing"
 done_percent = 0
 
-dir = global.dataDirectory + "lovika\\levels\\" + global.current_level + ".json"
+dir = ma_lovika + "levels\\" + global.current_level + ".json"
 	json_txt = file_text_open_read(dir)
 	json_string = ""
 
@@ -10,11 +10,13 @@ dir = global.dataDirectory + "lovika\\levels\\" + global.current_level + ".json"
 	do json_string = json_string + string(file_text_readln(json_txt)) until file_text_eof(json_txt)
 	//Read the json into a string
 	
+	file_text_close(json_txt)
+	
 	json = json_decode(json_string)
 	
 	global.current_resource_pack = json_get(json, "resource-packs", 0)
 
-	global.filter =  global.dataDirectory + global.current_resource_pack + ".json"
+	global.filter = ma_filters + global.current_resource_pack + "\\" + global.current_resource_pack + ".json"
 
 instance_create_depth(0, 0, 0, obj_parse_filter)
 

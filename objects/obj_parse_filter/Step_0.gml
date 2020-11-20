@@ -10,7 +10,7 @@ obj_gui.loading_bar_done = done_lines / total_lines
 
 if p = "done" {
 	global.filter = ds
-	global.block_textures = json_decode(util_file_to_string(global.dataDirectory + "\\resourcepacks\\" + global.current_resource_pack + "\\blocks.json"))
+	global.block_textures = json_decode(util_file_to_string(ma_resourcepacks + global.current_resource_pack + "\\blocks.json"))
 	debug_log("INFO", "Finished loading block filter.")
 	done = p
 	json_destroy(file)

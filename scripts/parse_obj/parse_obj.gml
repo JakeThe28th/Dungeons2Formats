@@ -184,9 +184,9 @@ function parse_obj() {
 						var texture_all = string_replace(current_block_name, "dungeonmaster:LEVELNAME/", "")
 					
 						//Just incase the block has a suffix that isn't in a texture
-						if !file_exists(global.dataDirectory + "\\resourcepacks\\" + global.current_resource_pack + "\\images\\blocks\\" + texture_all + ".png") {
+						if !file_exists(ma_resourcepacks + global.current_resource_pack + "\\images\\blocks\\" + texture_all + ".png") {
 							
-							if !file_exists(global.dataDirectory + "\\resourcepacks\\" + global.current_resource_pack + "\\images\\blocks\\" + texture_all + "_top.png") {
+							if !file_exists(ma_resourcepacks + global.current_resource_pack + "\\images\\blocks\\" + texture_all + "_top.png") {
 							
 							var texture_all_temp = string_replace(texture_all, "_slab", "")
 							var texture_all_temp = string_replace(texture_all_temp, "_path", "")
@@ -212,7 +212,7 @@ function parse_obj() {
 						var west = texture_all
 						
 						
-						if file_exists(global.dataDirectory + "\\resourcepacks\\" + global.current_resource_pack + "\\images\\blocks\\" + up + "_top.png") up = up + "_top"
+						if file_exists(ma_resourcepacks + global.current_resource_pack + "\\images\\blocks\\" + up + "_top.png") up = up + "_top"
 					
 						
 					
@@ -224,11 +224,11 @@ function parse_obj() {
 					#region Path type blocks
 					
 						var block_type = "path"
-						var template_model = global.dataDirectory + "\\models\\block\\j_template_path.json"
+						var template_model = ma_models_directory + "block\\j_template_path.json"
 						
-						if !file_exists(global.dataDirectory + "\\resourcepacks\\" + global.current_resource_pack + "\\images\\blocks\\" + up + ".png") up = up + "_top"
-						if !file_exists(global.dataDirectory + "\\resourcepacks\\" + global.current_resource_pack + "\\images\\blocks\\" + side + ".png") side = side + "_side"
-						if !file_exists(global.dataDirectory + "\\resourcepacks\\" + global.current_resource_pack + "\\images\\blocks\\" + down + ".png") down = down + "_side"
+						if !file_exists(ma_resourcepacks + global.current_resource_pack + "\\images\\blocks\\" + up + ".png") up = up + "_top"
+						if !file_exists(ma_resourcepacks + global.current_resource_pack + "\\images\\blocks\\" + side + ".png") side = side + "_side"
+						if !file_exists(ma_resourcepacks + global.current_resource_pack + "\\images\\blocks\\" + down + ".png") down = down + "_side"
 					
 						textfile_copy_replace(template_model, "%top%",  up, template_model_out)
 						textfile_copy_replace(template_model_out, "%side%", side, template_model_out)
@@ -242,7 +242,7 @@ function parse_obj() {
 					#region Cross type blocks
 					
 						var block_type = "flower"
-						var template_model = global.dataDirectory + "\\models\\block\\j_template_cross.json"
+						var template_model = ma_models_directory + "\\block\\j_template_cross.json"
 						
 					
 						textfile_copy_replace(template_model, "%texture_all%",  texture_all, template_model_out)
@@ -260,7 +260,7 @@ function parse_obj() {
 					#region bottom slabs
 						if string_pos("bottom", current_block) > 0 {
 							var temp = 1
-							var template_model = global.dataDirectory + "\\models\\block\\j_template_slab.json"
+							var template_model = ma_models_directory + "block\\j_template_slab.json"
 							
 					
 							textfile_copy_replace(template_model, "%top%",  up, template_model_out)
@@ -272,7 +272,7 @@ function parse_obj() {
 					#region top slabs	
 						if string_pos("top", current_block) > 0 {
 							var temp = 1
-							var template_model = global.dataDirectory + "\\models\\block\\j_template_slab_top.json"
+							var template_model = ma_models_directory + "block\\j_template_slab_top.json"
 							
 					
 							textfile_copy_replace(template_model, "%top%",  up, template_model_out)
@@ -284,7 +284,7 @@ function parse_obj() {
 					#region double slabs
 						if string_pos("double", current_block) > 0 {
 							var temp = 1
-							var template_model = global.dataDirectory + "\\models\\block\\j_template_full_slab.json"
+							var template_model = ma_models_directory + "\\block\\j_template_full_slab.json"
 							
 					
 							textfile_copy_replace(template_model, "%top%",  up, template_model_out)
@@ -295,7 +295,7 @@ function parse_obj() {
 						
 						if temp = 0 {
 							var temp = 1
-							var template_model = global.dataDirectory + "\\models\\block\\j_template_slab.json"
+							var template_model = ma_models_directory + "\\block\\j_template_slab.json"
 					
 							textfile_copy_replace(template_model, "%top%",  up, template_model_out)
 							textfile_copy_replace(template_model_out, "%side%", side, template_model_out)
@@ -308,7 +308,7 @@ function parse_obj() {
 				if block_type = "full" {
 				#region full blocks
 				
-					var template_model = global.dataDirectory + "\\models\\block\\j_template_full_block.json"
+					var template_model = ma_models_directory + "\\block\\j_template_full_block.json"
 						
 					
 						textfile_copy_replace(template_model, "%top%",  up, template_model_out)
@@ -336,7 +336,7 @@ function parse_obj() {
 			#region Get the block's json file
 			
 			//Get the blockstates json and decode it.
-			var blockstates_js = global.dataDirectory + "blockstates\\" + string_replace(current_block_name, "minecraft:", "")
+			var blockstates_js = ma_blockstates_directory + string_replace(current_block_name, "minecraft:", "")
 			var blockstates_js = util_file_to_string(blockstates_js + ".json")
 			var blockstates_js = json_decode(blockstates_js)
 			
@@ -370,7 +370,7 @@ function parse_obj() {
 			#endregion
 			
 		
-			var block_json = util_file_to_string(global.dataDirectory + "models\\" + string_replace(block_json, "minecraft:", "") + ".json")
+			var block_json = util_file_to_string(ma_models_directory + string_replace(block_json, "minecraft:", "") + ".json")
 			ds_map_destroy(blockstates_js)
 		
 			//The DS map of the minecraft model.

@@ -2,49 +2,32 @@ global.gui_values = ds_map_create()
 vh = display_get_gui_height()
 vw = display_get_gui_width()
 
-color_bg = make_color_hsv(0*0.70833333333, 0*2.55, 80*2.55)
-color_box = make_color_hsv(0*0.70833333333, 0*2.55, 55*2.55)
-color_darkbox = make_color_hsv(0*0.70833333333, 0*2.55, 40*2.55)
-color_text = c_black
-color_loading_done = make_color_hsv(134*0.70833333333, 54*2.55, 80*2.55)
 
-grayed_out_buttons = false
 
-selected_level = "squidcoast"
-global.current_level = selected_level
-selected_group = 0
-selected_object = 0
+grayed_out_buttons = true
 
-loading_bar_text_type = "normal"
+grayed_out_buttons = true
 
-				
-		instance_create_depth(0, 0, 1, obj_load_level)
-		grayed_out_buttons = true
-		loading_bar_text = "Loading " + string(global.current_level) + " Filter"
+gui_update_loadingbar("normal", "Loading " + string(global.current_level) + " Filter", 0, color_loading_done, color_box, "MainLoader")
 		
-		//PAUSE ALL STUFF UNTIL LEVEL IS LOADED!
-		//GET RETURNED VALUES
-				
-		level_json = json_decode(obj_load_level.json_string)
-		
-
-var dir = global.dataDirectory + "lovika\\levels\\" + selected_level + ".json"
-var json_txt = file_text_open_read(dir)
-var json_string = ""
-
-repeat 6 file_text_readln(json_txt) //Get past mojang's comment
-
-do json_string = json_string + string(file_text_readln(json_txt)) until file_text_eof(json_txt)
-//Read the json into a string
-
-level_json = json_decode(json_string)
-
-
-level_array = dng_levels_list()
-
-loading_bar_text = "hello"
-loading_bar_done = 0
 
 scroll_percent = 0
 
+
+
+selected_level = global.selected_level
+selected_group = global.selected_group
+selected_object = global.selected_object
+
+
+
+level_array = global.level_array
+
+level_json = global.level_json
+
+gui_update_ds_list_multiple(ds_map_find_value(selected_group, "objects"), "none", c_aqua, c_lime, c_green, "SelGroup")
+
 //export_whole_group = false
+
+
+

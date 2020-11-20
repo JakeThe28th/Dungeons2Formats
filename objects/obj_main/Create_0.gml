@@ -1,15 +1,28 @@
-global.objectgroup = "false"
-
-global.dataDirectory = filename_path(get_save_filename("Data directory|*.*", "Enter the directory and press save.sav"))
+global.ds_map_list = ds_list_create()
 
 global.filter = false
 
 global.current_resource_pack = "squidcoast"
+global.current_level = "squidcoast"
 
-global.ds_map_list = ds_list_create()
+
+//Init GUI Builder functions
+global.gui_ds = ds_map_create()
+gui_functions()
+
+
+global.selected_level = "squidcoast"
+global.selected_group = 0
+global.selected_object = 0
+
+
+
+global.level_array = dng_levels_list()
+
+instance_create_depth(0, 0, 1, obj_load_level)
+global.level_json = json_decode(obj_load_level.json_string)
 
 instance_create_depth(0, 0, 1, obj_gui)
 
-//global.currentfilter = get_open_filename("Dungeons Map Filters|*.json", "")
-//instance_create_depth(0, 0, 1, obj_parse_filter) //temp
+
 

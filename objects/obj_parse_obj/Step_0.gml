@@ -6,9 +6,10 @@ var p = parse_obj()
 
 //current_block = "stone"
 
-obj_gui.loading_bar_done = blocks_done / blocks_total
-obj_gui.loading_bar_text_type = "small"
-obj_gui.loading_bar_text = "Converting blocks to obj. Block count: " + string(blocks_total) + " Blocks done: " + string(blocks_done) + ", Current block: " + current_block
+var loading_bar_text_type = "small"
+var loading_bar_text = "Converting blocks to obj. Block count: " + string(blocks_total) + " Blocks done: " + string(blocks_done) + ", Current block: " + current_block
+
+gui_update_loadingbar("small", loading_bar_text, blocks_done / blocks_total, color_loading_done, color_box, "MainLoader")
 
 //if blocks_done = max_blocks_per_file*block_file_cycles {
 //	block_file_cycles++
