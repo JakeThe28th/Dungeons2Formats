@@ -16,8 +16,8 @@ function order_least_greatest(argument0, argument1) {
 			
 		var array = array_create(2, "")
 	
-		array[0] = num1
-		array[1] = num2
+		array[0] = outnum1
+		array[1] = outnum2
 	
 		return array
 

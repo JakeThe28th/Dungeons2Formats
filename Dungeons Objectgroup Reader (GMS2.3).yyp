@@ -16,7 +16,6 @@
     {"id":{"name":"parse_filter","path":"scripts/parse_filter/parse_filter.yy",},"order":1,},
     {"id":{"name":"macros","path":"scripts/macros/macros.yy",},"order":3,},
     {"id":{"name":"generate_schematic","path":"scripts/generate_schematic/generate_schematic.yy",},"order":4,},
-    {"id":{"name":"gui_button","path":"scripts/gui_button/gui_button.yy",},"order":5,},
     {"id":{"name":"execute","path":"scripts/execute/execute.yy",},"order":0,},
     {"id":{"name":"gzunzip","path":"scripts/gzunzip/gzunzip.yy",},"order":1,},
     {"id":{"name":"lib_gz","path":"scripts/lib_gz/lib_gz.yy",},"order":2,},

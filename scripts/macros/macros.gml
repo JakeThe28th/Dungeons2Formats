@@ -17,10 +17,11 @@ function macros() {
 #macro ma_filters ma_directory + "filters\\"
 
 
-#macro color_bg make_color_hsv(0*0.70833333333, 0*2.55, 80*2.55)
-#macro color_box make_color_hsv(0*0.70833333333, 0*2.55, 55*2.55)
-#macro color_darkbox make_color_hsv(0*0.70833333333, 0*2.55, 40*2.55)
-#macro color_text c_black
-#macro color_loading_done make_color_hsv(134*0.70833333333, 54*2.55, 80*2.55)
+#macro col_bg make_color_hsv(0*0.70833333333, 0*2.55, 80*2.55)
+#macro col_normal make_color_hsv(0*0.70833333333, 0*2.55, 55*2.55)
+#macro col_med_light make_color_hsv(0*0.70833333333, 0*2.55, 40*2.55)
+#macro col_light make_color_hsv(0*0.70833333333, 0*2.55, 40*2.55)
+#macro col_txt c_white
+#macro col_loading_done make_color_hsv(134*0.70833333333, 54*2.55, 80*2.55)
 
 }

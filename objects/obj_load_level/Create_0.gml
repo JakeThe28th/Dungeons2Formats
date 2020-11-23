@@ -1,3 +1,5 @@
+//Create level variables based on an input name.
+
 done = "initializing"
 done_percent = 0
 
@@ -15,11 +17,11 @@ dir = ma_lovika + "levels\\" + global.current_level + ".json"
 	json = json_decode(json_string)
 	
 	global.current_resource_pack = json_get(json, "resource-packs", 0)
-
 	global.filter = ma_filters + global.current_resource_pack + "\\" + global.current_resource_pack + ".json"
+	
 
 instance_create_depth(0, 0, 0, obj_parse_filter)
 
-done = "false"
+done = false
 				
 				
