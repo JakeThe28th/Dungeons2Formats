@@ -2,12 +2,16 @@
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
 
 	
-function gui_draw_button(x1, y1, x2, y2, color, hovercolor, text) {
+function gui_draw_button(x1, y1, x2, y2, color, hovercolor, text, px, py, menu) {
 	var state = false
 	
-	if point_in_area(x1, y1, x2, y2, mouse_x, mouse_y) {
+	
+	if point_in_area(x1, y1, x2, y2, px, py) {
 		if mouse_check_button_released(mb_left) state = true
-		draw_rectangle_color(x1, y1, x2, y2, hovercolor, hovercolor, hovercolor, hovercolor, false) 
+		if global.current_menu = menu or menu = false {
+		//draw_rectangle_color(x1, y1, x2, y2, color, color, color, color, false) 
+		draw_rectangle_color(x1, y1, x2, y2, hovercolor, merge_color(hovercolor, color, .75), merge_color(hovercolor, color, .75), hovercolor, false) 
+		}
 		} else {
 			draw_rectangle_color(x1, y1, x2, y2, color, color, color, color, false) 
 			}
@@ -26,29 +30,58 @@ function gui_draw_button(x1, y1, x2, y2, color, hovercolor, text) {
 //order_mode have the options vertical and horizontal, horizontal = scrolls horizontally, 
 //and goes down the list vertically until it hits the bounds, vertical = scrolls vertical, goes horizonally.
 //Drawing includes a scroll bar at the end of bounds, so i subtract that from bounds for the array itself.
-function gui_draw_ds_list(x1, y1, x2, y2, color, hovercolor, scr_barcolor, scr_thumbcolor, ds, order_mode, scroll_amount, dungeons) {
+function gui_draw_ds_list(x1, y1, x2, y2, values, ds, dungeons, menu) {
+	//values = color, hovercolor, scr_barcolor, scr_thumbcolor, scroll_amount,
+	var color = ds_map_find_value(values, "color")
+	var hovercolor = ds_map_find_value(values, "hovercolor")
+	var scr_barcolor = ds_map_find_value(values, "scr_barcolor")
+	var scr_thumbcolor = ds_map_find_value(values, "scr_thumbcolor")
+	var scroll_amount = ds_map_find_value(values, "scroll_amount")
+	
 	var orderx = order_least_greatest(x1, x2)
 	var ordery = order_least_greatest(y1, y2)
 		x1 = orderx[0]
 		x2 = orderx[1]
 		y1 = ordery[0]
 		y2 = ordery[1]
-		var w_y2 = ordery[1]-20 //y1 minus scroll bar (horizontal)
-		var w_x2 = orderx[1]-20 //x1 minus scroll bar (vertical)
+		//Temp for surface
+		var t_x1 = orderx[0]
+		var t_x2 = orderx[1]
+		var t_y1 = ordery[0]
+		var t_y2 = ordery[1]
+		
+		var w_t_y2 = ordery[1]-20 //t_y1 minus scroll bar
 		
 	var s_bc = scr_barcolor
 	var c = color
 	var c_h = hovercolor
+	var s_tc = scr_thumbcolor
 	
+	var mx = mouse_x
+	var my = mouse_y
 	
+	if !performance_mode {
+		var ds_surf = surface_create(t_x2-t_x1, (t_y2-t_y1))
+		surface_set_target(ds_surf)
 		
-	if order_mode = "horizontal" { 
+		t_x1 -= x1
+		t_x2 -= x1
+		t_y1 -= y1
+		t_y2 -= y1
+		
+		w_t_y2 -=y1
+		w_t_y2 -=x1
+		
+		mx -= x1
+		my -= y1
+		}
+	
 		#region button size
-		var divideby = 6
-		var min_size = 40
+		var divideby = 8
+		var min_size = 30
 		do {
 		//Divide the size to fit it into the bounds
-		var b_size_y = (w_y2-y1)/divideby 
+		var b_size_y = (w_t_y2-t_y1)/divideby 
 		//If we can't divide by less to get the button size over the minimum,
 		//set it to the minimum.
 		if divideby = 1 and b_size_y < min_size b_size_y = min_size
@@ -65,84 +98,116 @@ function gui_draw_ds_list(x1, y1, x2, y2, color, hovercolor, scr_barcolor, scr_t
 		var i = 0
 		#endregion
 		
-		draw_rectangle_color(x1, y1, x2, w_y2, c,c,c,c, false)
-		draw_rectangle_color(x1, w_y2, x2, w_y2+20, s_bc,s_bc,s_bc,s_bc, false)
+		draw_rectangle_color(t_x1, t_y1, t_x2, w_t_y2, c,c,c,c, false)
+		draw_rectangle_color(t_x1, t_y2, t_x2, w_t_y2, s_bc,s_bc,s_bc,s_bc,false)
+		
 		
 		repeat ds_list_size(ds) {
-			if (y1+(b_size_y*(iy+1))-5) >= w_y2 {
+			if (t_y1+(b_size_y*(iy+1))-5) >= w_t_y2 {
 				iy=  0
 				ix++
 				}
 			
-			var x1_inc = x1+(b_size_x*ix) + scroll_amount
-			var x2_inc = x1+(b_size_x*(ix+1))-5 + scroll_amount
-			var y1_inc = y1+(b_size_y*iy)
-			var y2_inc = y1+(b_size_y*(iy+1))-5
+			var t_x1_inc = t_x1+(b_size_x*ix) + scroll_amount
+			var t_x2_inc = t_x1+(b_size_x*(ix+1))-5 + scroll_amount
+			var t_y1_inc = t_y1+(b_size_y*iy)
+			var t_y2_inc = t_y1+(b_size_y*(iy+1))-5
 			
-			//clamp(, x1, x2)
+			//clamp(, t_x1, t_x2)
 			
-			//if x1_inc > x1 and x2_inc < x2 {
+			//if t_x1_inc > t_x1 and t_x2_inc < t_x2 {
 			
 			if dungeons = "dungeons" {
-				gui_draw_button(x1_inc, y1_inc, x2_inc, y2_inc, c_blue, c_h, ds_map_find_value(ds[| i], "id")) 
-				} else { gui_draw_button(x1_inc, y1_inc, x2_inc, y2_inc, c_blue, c_h, ds[| i]) }
+				gui_draw_button(t_x1_inc, t_y1_inc, t_x2_inc, t_y2_inc, c, c_h, ds_map_find_value(ds[| i], "id"), mx, my, menu) 
+				} else { gui_draw_button(t_x1_inc, t_y1_inc, t_x2_inc, t_y2_inc, c, c_h, ds[| i], mx, my, menu) }
 			
 			//}
 		
 			i++
 			iy++
+			}
 			
-			
+		if !performance_mode {
+			surface_reset_target()
+			draw_surface(ds_surf, x1, y1)
+			surface_free(ds_surf)
+			}
+
+}
+
+function gui_draw_dropdown(x1, y1, x2, y2, ds, values, text, menu) {
+	//values = color, hovercolor, scr_barcolor, scr_thumbcolor, scroll_amount,
+	var color = ds_map_find_value(values, "color")
+	var hovercolor = ds_map_find_value(values, "hovercolor")
+	var scr_barcolor = ds_map_find_value(values, "scr_barcolor")
+	var scr_thumbcolor = ds_map_find_value(values, "scr_thumbcolor")
+	var scroll_amount = ds_map_find_value(values, "scroll_amount")
+	
+	if !ds_map_exists(values, "open") ds_map_add(values, "open", 0)
+	var open = ds_map_find_value(values, "open")
+	
+	var open_y2 = vh-100
+	
+	//Toggle open/closed
+	if gui_draw_button(x1, y1, x2, y2, color, hovercolor, text, mouse_x, mouse_y, 0) {
+		switch(open) {
+			case true: open = false; global.current_menu = "tiles";break;
+			case false: open = true; global.current_menu = menu; break;
 			}
 		}
-		
-	if order_mode = "vertical" { 
-		draw_rectangle_color(x1, y1, w_x2, y2, c,c,c,c, false)
-		draw_rectangle_color(w_x2, y1, w_x2+20, y2, s_bc,s_bc,s_bc,s_bc, false)
-		
-		#region button size
-		var divideby = 4
-		var min_size = 180
-		do {
-		//Divide the size to fit it into the bounds
-		var b_size_x = (x2-x1)/divideby 
-		//If we can't divide by less to get the button size over the minimum,
-		//set it to the minimum.
-		if divideby = 1 and b_size_x < min_size b_size_x = min_size
-		
-		divideby-- //If the size is less than the minimum,
-		//this will decrement (until statement)
-		
-		} until b_size_x >= min_size
 	
-		var b_size_y = 40 //button size
-		var ix = 0
-		var iy = 0
-		var i = 0
-		#endregion
+	//Transition
+	if !performance_mode {
+		var percent = ds_map_find_value(values, "percent_transition")
+		if !ds_map_exists(values, "percent_transition") ds_map_add(values, "percent_transition", 1) else {
+			if open {
+				if percent < 100 { 
+					percent = 100 - ((100-percent)/2)
+					if ceil(percent) = 100 then percent = 100
+				
+					ds_map_set(values, "percent_transition", percent)
+					}
+			
 		
-		draw_rectangle_color(x1, y1, x2, w_y2, c,c,c,c, false)
-		draw_rectangle_color(x1, w_y2, x2, w_y2+20, s_bc,s_bc,s_bc,s_bc, false)
-		
-		repeat ds_list_size(ds) {
-			if (x1+(b_size_x*(ix+1))-5) >= x2 {
-				iy=  0
-				ix++
+				var order = order_least_greatest(y2, open_y2)
+				open_y2 = ceil(lerp(order[0], order[1], percent/100) + 1)
+				if percent < 5 open_y2 = y2+1
 				}
+				
+			if !open and percent > 10 {
+				
+				if percent > 0 { 
+					percent -= (percent/2)
+					if floor(percent) = 0 then percent = 0
+				
+					ds_map_set(values, "percent_transition", percent)
+					}
 			
-			var x1_inc = x1+(b_size_x*ix)
-			var x2_inc = x1+(b_size_x*(ix+1))-5
-			var y1_inc = y1+(b_size_y*iy)
-			var y2_inc = y1+(b_size_y*(iy+1))-5
-			
-			if dungeons = "dungeons" {
-				gui_draw_button(x1_inc, y1_inc, x2_inc, y2_inc, c_blue, c_h, ds_map_find_value(ds[| i], "id")) 
-				} else { gui_draw_button(x1_inc, y1_inc, x2_inc, y2_inc, c_blue, c_h, ds[| i]) }
 		
-			i++
-			iy++
-			
-			
+				var order = order_least_greatest(y2, open_y2)
+				open_y2 = floor(lerp(order[0], order[1], percent/100) + 1)
+				if percent < 5 open_y2 = y2+1
+				
+				
+				//draw the DS
+				gui_draw_ds_list(x1, y2, x1+(180*2), open_y2, values, ds, false, menu)
+				}
 			}
+			
+		}
+	
+	//Draw the ds
+	if open = true {
+		gui_draw_ds_list(x1, y2, x1+(180*2), open_y2, values, ds, false, menu)
+		
+		}
+		
+	if mouse_check_button_released(mb_left) and !point_in_area(x1, y1, x2, y2, mouse_x, mouse_y) { 
+		open = false; 
+		global.current_menu = "tiles";
+		}
+		
+	
+	ds_map_set(values, "open", open)
+	return values
 	}
-}
