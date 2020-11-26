@@ -15,7 +15,6 @@ scroll_amount = 0
 ds = json_get(json_load(ma_lovika + "objectgroups\\" + json_get(global.level_json, "object-groups", global.selected_group) + ".json"), "objects")
 
 
-level_dropdown_open = false
 level_dropdown_values = ds_map_create()
 //values = color, hovercolor, scr_barcolor, scr_thumbcolor, scroll_amount,
 //gui_draw_dropdown(5, 5, vh/5, 80, ds_levels, level_dropdown_open, c_aqua, c_green, c_black, c_fuchsia, 0, "Level name")
@@ -24,6 +23,17 @@ ds_map_add(level_dropdown_values, "hovercolor", col_med_light)
 ds_map_add(level_dropdown_values, "scr_barcolor", col_normal)
 ds_map_add(level_dropdown_values, "scr_thumbcolor", col_dark)
 ds_map_add(level_dropdown_values, "scroll_amount", 0)
+
+
+obj_ds = json_get(global.level_json, "object-groups")
+objects_dropdown_values = ds_map_create()
+//values = color, hovercolor, scr_barcolor, scr_thumbcolor, scroll_amount,
+//gui_draw_dropdown(5, 5, vh/5, 80, ds_levels, level_dropdown_open, c_aqua, c_green, c_black, c_fuchsia, 0, "Level name")
+ds_map_add(objects_dropdown_values, "color", col_dark)
+ds_map_add(objects_dropdown_values, "hovercolor", col_med_light)
+ds_map_add(objects_dropdown_values, "scr_barcolor", col_normal)
+ds_map_add(objects_dropdown_values, "scr_thumbcolor", col_dark)
+ds_map_add(objects_dropdown_values, "scroll_amount", 0)
 
 
 tile_list_values = ds_map_create()

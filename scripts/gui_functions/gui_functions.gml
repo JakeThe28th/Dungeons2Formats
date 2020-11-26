@@ -92,7 +92,40 @@ function gui_draw_ds_list(x1, y1, x2, y2, values, ds, dungeons, menu) {
 		
 		} until b_size_y >= min_size
 	
-		var b_size_x = 180 //button size
+		//Static button width
+		var b_size_x = 180
+		
+		//Dynamic button width
+		if performance_mode = false {
+			var i = 0;
+			var maxtextsize = 0;
+			repeat ds_list_size(ds) {
+				if dungeons = "dungeons" {
+					var val = ds_map_find_value(ds[| i], "id")
+					} else val = ds[| i]
+				if string_width(val) > maxtextsize then maxtextsize = string_width(val)
+				i++
+				}
+			b_size_x = maxtextsize+10
+			
+			//Dynamic X background size to match dynamic button
+			var x_loops = 1
+			var iy = 0
+			repeat ds_list_size(ds) {
+				iy++
+				if t_y1+(iy*b_size_y) >= w_t_y2 {
+					x_loops++
+					iy= 0
+					}
+				}
+				
+			t_x2 = b_size_x*x_loops
+				
+			}
+			
+		
+		
+		
 		var ix = 0
 		var iy = 0
 		var i = 0
@@ -100,6 +133,8 @@ function gui_draw_ds_list(x1, y1, x2, y2, values, ds, dungeons, menu) {
 		
 		draw_rectangle_color(t_x1, t_y1, t_x2, w_t_y2, c,c,c,c, false)
 		draw_rectangle_color(t_x1, t_y2, t_x2, w_t_y2, s_bc,s_bc,s_bc,s_bc,false)
+		
+		
 		
 		
 		repeat ds_list_size(ds) {
@@ -204,7 +239,8 @@ function gui_draw_dropdown(x1, y1, x2, y2, ds, values, text, menu) {
 		
 	if mouse_check_button_released(mb_left) and !point_in_area(x1, y1, x2, y2, mouse_x, mouse_y) { 
 		open = false; 
-		global.current_menu = "tiles";
+		if global.current_menu = menu then global.current_menu = "tiles";
+		
 		}
 		
 	
