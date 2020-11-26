@@ -145,7 +145,7 @@ function gui_draw_ds_list(x1, y1, x2, y2, values, ds, dungeons, menu) {
 		draw_rectangle_color(t_x1, t_y2, t_x2, w_t_y2, s_bc,s_bc,s_bc,s_bc,false)
 		
 		
-		
+		var selected = ds_map_find_value(values, "selected")
 		
 		repeat ds_list_size(ds) {
 			if (t_y1+(b_size_y*(iy+1))-5) >= w_t_y2 {
@@ -162,9 +162,26 @@ function gui_draw_ds_list(x1, y1, x2, y2, values, ds, dungeons, menu) {
 			
 			//if t_x1_inc > t_x1 and t_x2_inc < t_x2 {
 			
+			if i = selected {
+				var c_temp = c
+				c = hovercolor
+				}	
+			
 			if dungeons = "dungeons" {
-				gui_draw_button(t_x1_inc, t_y1_inc, t_x2_inc, t_y2_inc, c, c_h, ds_map_find_value(ds[| i], "id"), mx, my, menu) 
-				} else { gui_draw_button(t_x1_inc, t_y1_inc, t_x2_inc, t_y2_inc, c, c_h, ds[| i], mx, my, menu) }
+				if gui_draw_button(t_x1_inc, t_y1_inc, t_x2_inc, t_y2_inc, c, c_h, ds_map_find_value(ds[| i], "id"), mx, my, menu) {
+					ds_map_set(values, "selected", i)
+					ds_map_set(values, "selected_name", ds_map_find_value(ds[| i], "id"))
+					}
+				} else { 
+					if gui_draw_button(t_x1_inc, t_y1_inc, t_x2_inc, t_y2_inc, c, c_h, ds[| i], mx, my, menu) {
+						ds_map_set(values, "selected", i)
+						ds_map_set(values, "selected_name", ds[| i])
+						}
+					}
+					
+			if i = selected {
+				c = c_temp
+				}	
 			
 			//}
 		
@@ -249,8 +266,11 @@ function gui_draw_dropdown(x1, y1, x2, y2, ds, values, text, menu) {
 		}
 		
 	if mouse_check_button_released(mb_left) and !point_in_area(x1, y1, x2, y2, mouse_x, mouse_y) { 
-		open = false; 
-		if global.current_menu = menu then global.current_menu = "tiles";
+		//open = false; 
+		//if global.current_menu = menu then global.current_menu = "tiles";
+		
+		if global.current_menu != menu open = false
+		//TEMP while i figure out how to use dynamic lengths with out of bounds clicking
 		
 		}
 		

@@ -1,7 +1,7 @@
 debug_log("INFO", "Starting to load block filter.")
 ds = ds_map_create()
 global.realfilter = global.filter
-if !file_exists(global.filter) global.filter = global.dataDirectory + "default.json"
+if !file_exists(global.filter) global.filter = ma_filters + "default.json"
 file = json_load(global.filter)
 
 i = 0

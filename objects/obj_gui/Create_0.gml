@@ -24,6 +24,8 @@ ds_map_add(level_dropdown_values, "scr_barcolor", col_normal)
 ds_map_add(level_dropdown_values, "scr_thumbcolor", col_dark)
 ds_map_add(level_dropdown_values, "scroll_amount", 0)
 ds_map_add(level_dropdown_values, "dynamic", true)
+ds_map_add(level_dropdown_values, "selected", 1)
+ds_map_add(level_dropdown_values, "selected_name", global.current_level)
 
 
 obj_ds = json_get(global.level_json, "object-groups")
@@ -36,6 +38,8 @@ ds_map_add(objects_dropdown_values, "scr_barcolor", col_normal)
 ds_map_add(objects_dropdown_values, "scr_thumbcolor", col_dark)
 ds_map_add(objects_dropdown_values, "scroll_amount", 0)
 ds_map_add(objects_dropdown_values, "dynamic", true)
+ds_map_add(level_dropdown_values, "selected", 1)
+
 
 
 tile_list_values = ds_map_create()

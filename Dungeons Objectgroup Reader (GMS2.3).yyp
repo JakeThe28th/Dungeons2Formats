@@ -14,6 +14,7 @@
     {"id":{"name":"compress_gzip_7z","path":"scripts/compress_gzip_7z/compress_gzip_7z.yy",},"order":10,},
     {"id":{"name":"util_file_to_string","path":"scripts/util_file_to_string/util_file_to_string.yy",},"order":11,},
     {"id":{"name":"parse_filter","path":"scripts/parse_filter/parse_filter.yy",},"order":1,},
+    {"id":{"name":"update_key_vars","path":"scripts/update_key_vars/update_key_vars.yy",},"order":20,},
     {"id":{"name":"macros","path":"scripts/macros/macros.yy",},"order":3,},
     {"id":{"name":"generate_schematic","path":"scripts/generate_schematic/generate_schematic.yy",},"order":4,},
     {"id":{"name":"execute","path":"scripts/execute/execute.yy",},"order":0,},
