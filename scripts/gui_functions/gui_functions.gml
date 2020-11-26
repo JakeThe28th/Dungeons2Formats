@@ -97,6 +97,8 @@ function gui_draw_ds_list(x1, y1, x2, y2, values, ds, dungeons, menu) {
 		
 		//Dynamic button width
 		if performance_mode = false {
+			if values[? "dynamic"] !=undefined {
+				if values[? "dynamic"] = 1 {
 			var i = 0;
 			var maxtextsize = 0;
 			repeat ds_list_size(ds) {
@@ -108,7 +110,7 @@ function gui_draw_ds_list(x1, y1, x2, y2, values, ds, dungeons, menu) {
 				}
 			b_size_x = maxtextsize+10
 			
-			//Dynamic X background size to match dynamic button
+			//Dynamic background size to match dynamic button
 			var x_loops = 1
 			var iy = 0
 			repeat ds_list_size(ds) {
@@ -119,8 +121,16 @@ function gui_draw_ds_list(x1, y1, x2, y2, values, ds, dungeons, menu) {
 					}
 				}
 				
+			//BG_X
 			t_x2 = b_size_x*x_loops
-				
+			
+			//BG_Y
+			if x_loops < 2 w_t_y2 = iy*b_size_y
+			if x_loops < 2 t_y2 = iy*b_size_y + 20
+			
+			
+			}
+			}
 			}
 			
 		
@@ -182,7 +192,7 @@ function gui_draw_dropdown(x1, y1, x2, y2, ds, values, text, menu) {
 	var open = ds_map_find_value(values, "open")
 	
 	var open_y2 = vh-100
-	
+
 	//Toggle open/closed
 	if gui_draw_button(x1, y1, x2, y2, color, hovercolor, text, mouse_x, mouse_y, 0) {
 		switch(open) {
@@ -192,7 +202,8 @@ function gui_draw_dropdown(x1, y1, x2, y2, ds, values, text, menu) {
 		}
 	
 	//Transition
-	if !performance_mode {
+	var transition = false
+	if transition {
 		var percent = ds_map_find_value(values, "percent_transition")
 		if !ds_map_exists(values, "percent_transition") ds_map_add(values, "percent_transition", 1) else {
 			if open {
