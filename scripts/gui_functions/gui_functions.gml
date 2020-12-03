@@ -51,6 +51,7 @@ function gui_draw_ds_list(x1, y1, x2, y2, values, ds, dungeons, menu) {
 		var t_y2 = ordery[1]
 		
 		var w_t_y2 = ordery[1]-20 //t_y1 minus scroll bar
+		if ds_map_exists(values, "scroll") and values[? "scroll"] w_t_y2 = ordery[1]
 		
 	var s_bc = scr_barcolor
 	var c = color
@@ -70,7 +71,7 @@ function gui_draw_ds_list(x1, y1, x2, y2, values, ds, dungeons, menu) {
 		t_y2 -= y1
 		
 		w_t_y2 -=y1
-		w_t_y2 -=x1
+		//w_t_y2 -=x1
 		
 		mx -= x1
 		my -= y1
@@ -78,80 +79,63 @@ function gui_draw_ds_list(x1, y1, x2, y2, values, ds, dungeons, menu) {
 	
 		#region button size
 		var divideby = 8
-		var min_size = 30
+		var min_size = 20
 		do {
-		//Divide the size to fit it into the bounds
-		var b_size_y = (w_t_y2-t_y1)/divideby 
-		//If we can't divide by less to get the button size over the minimum,
-		//set it to the minimum.
-		if divideby = 1 and b_size_y < min_size b_size_y = min_size
+			//Divide the size to fit it into the bounds
+			var b_size_y = (w_t_y2-t_y1)/divideby 
+			
+			//If we can't divide by less to get the button size over the minimum,
+			//set it to the minimum.
+			if divideby = 1 and b_size_y < min_size b_size_y = min_size
 		
 		
-		divideby-- //If the size is less than the minimum,
-		//this will decrement (until statement)
+			divideby-- //If the size is less than the minimum,
+			//this will decrement (until statement)
 		
 		} until b_size_y >= min_size
-	
+		
 		//Static button width
 		var b_size_x = 180
 		
-		//Dynamic button width
-		if performance_mode = false {
-			if values[? "dynamic"] !=undefined {
-				if values[? "dynamic"] = 1 {
-			var i = 0;
-			var maxtextsize = 0;
-			repeat ds_list_size(ds) {
-				if dungeons = "dungeons" {
-					var val = ds_map_find_value(ds[| i], "id")
-					} else val = ds[| i]
-				if string_width(val) > maxtextsize then maxtextsize = string_width(val)
-				i++
-				}
-			b_size_x = maxtextsize+10
+		var divideby = 8
+		var min_size = 180
+		do {
+			//Repeat code of above loop, but for x size.
+			var b_size_x = (t_x2-t_x1)/divideby 
 			
-			//Dynamic background size to match dynamic button
-			var x_loops = 1
-			var iy = 0
-			repeat ds_list_size(ds) {
-				iy++
-				if t_y1+(iy*b_size_y) >= w_t_y2 {
-					x_loops++
-					iy= 0
-					}
-				}
-				
-			//BG_X
-			t_x2 = b_size_x*x_loops
-			
-			//BG_Y
-			if x_loops < 2 w_t_y2 = iy*b_size_y
-			if x_loops < 2 t_y2 = iy*b_size_y + 20
-			
-			
-			}
-			}
-			}
-			
+			if divideby = 1 and b_size_x < min_size b_size_x = min_size
+			divideby-- 
 		
+		} until b_size_x >= min_size
+	
 		
-		
+
 		var ix = 0
 		var iy = 0
 		var i = 0
 		#endregion
 		
 		draw_rectangle_color(t_x1, t_y1, t_x2, w_t_y2, c,c,c,c, false)
-		draw_rectangle_color(t_x1, t_y2, t_x2, w_t_y2, s_bc,s_bc,s_bc,s_bc,false)
+		
+		//Draw scroll bar
+		if !ds_map_exists(values, "scroll") or values[? "scroll"] {
+			draw_rectangle_color(t_x1, t_y2, t_x2, w_t_y2, s_bc,s_bc,s_bc,s_bc,false)
+			}
 		
 		
 		var selected = ds_map_find_value(values, "selected")
+		
+		//if ds_map_exists(values, "scroll") and !values[? "scroll"] {
+		//		var b = "a"
+		//		}
 		
 		repeat ds_list_size(ds) {
 			if (t_y1+(b_size_y*(iy+1))-5) >= w_t_y2 {
 				iy=  0
 				ix++
 				}
+				
+			
 			
 			var t_x1_inc = t_x1+(b_size_x*ix) + scroll_amount
 			var t_x2_inc = t_x1+(b_size_x*(ix+1))-5 + scroll_amount
@@ -208,7 +192,6 @@ function gui_draw_dropdown(x1, y1, x2, y2, ds, values, text, menu) {
 	if !ds_map_exists(values, "open") ds_map_add(values, "open", 0)
 	var open = ds_map_find_value(values, "open")
 	
-	var open_y2 = vh-100
 
 	//Toggle open/closed
 	if gui_draw_button(x1, y1, x2, y2, color, hovercolor, text, mouse_x, mouse_y, 0) {
@@ -217,10 +200,24 @@ function gui_draw_dropdown(x1, y1, x2, y2, ds, values, text, menu) {
 			case false: open = true; global.current_menu = menu; break;
 			}
 		}
+		
+	//Temporary dimensions
+	var open_y2 = vh-100
+	var open_x2 = x1+(180*2)
+	
+	//Get widest entry from DS list
+	var maxstringwidth = 0
+	var i = 0
+	repeat(ds_list_size(ds)) { if string_width(ds[| i]) > maxstringwidth maxstringwidth = string_width(ds[| i]); i++ }
+	
+	//Set the dimensions to fit the text.
+	open_y2 = y2 + ((string_height(ds[| 0])+10)*ds_list_size(ds))
+	if open_y2 < y2+300 open_x2 = x1+ maxstringwidth +30
+	
 	
 	//Transition
-	var transition = false
-	if transition {
+	//var transition = false
+	if !performance_mode {
 		var percent = ds_map_find_value(values, "percent_transition")
 		if !ds_map_exists(values, "percent_transition") ds_map_add(values, "percent_transition", 1) else {
 			if open {
@@ -259,17 +256,19 @@ function gui_draw_dropdown(x1, y1, x2, y2, ds, values, text, menu) {
 			
 		}
 	
+	
+	
 	//Draw the ds
 	if open = true {
-		gui_draw_ds_list(x1, y2, x1+(180*2), open_y2, values, ds, false, menu)
+		gui_draw_ds_list(x1, y2, open_x2, open_y2, values, ds, false, menu)
 		
 		}
 		
-	if mouse_check_button_released(mb_left) and !point_in_area(x1, y1, x2, y2, mouse_x, mouse_y) { 
-		//open = false; 
-		//if global.current_menu = menu then global.current_menu = "tiles";
+	if mouse_check_button_released(mb_left) and !point_in_area(x1, y1, open_x2, open_y2, mouse_x, mouse_y) { 
+		open = false; 
+		if global.current_menu = menu then global.current_menu = "tiles";
 		
-		if global.current_menu != menu open = false
+		//if global.current_menu != menu open = false
 		//TEMP while i figure out how to use dynamic lengths with out of bounds clicking
 		
 		}

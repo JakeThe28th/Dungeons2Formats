@@ -23,8 +23,8 @@ ds_map_add(level_dropdown_values, "hovercolor", col_med_light)
 ds_map_add(level_dropdown_values, "scr_barcolor", col_normal)
 ds_map_add(level_dropdown_values, "scr_thumbcolor", col_dark)
 ds_map_add(level_dropdown_values, "scroll_amount", 0)
-ds_map_add(level_dropdown_values, "dynamic", true)
-ds_map_add(level_dropdown_values, "selected", 1)
+ds_map_add(level_dropdown_values, "scroll", false)
+ds_map_add(level_dropdown_values, "selected", 0)
 ds_map_add(level_dropdown_values, "selected_name", global.current_level)
 
 
@@ -37,8 +37,8 @@ ds_map_add(objects_dropdown_values, "hovercolor", col_med_light)
 ds_map_add(objects_dropdown_values, "scr_barcolor", col_normal)
 ds_map_add(objects_dropdown_values, "scr_thumbcolor", col_dark)
 ds_map_add(objects_dropdown_values, "scroll_amount", 0)
-ds_map_add(objects_dropdown_values, "dynamic", true)
-ds_map_add(level_dropdown_values, "selected", 1)
+ds_map_add(objects_dropdown_values, "scroll", false)
+ds_map_add(level_dropdown_values, "selected", 0)
 
 
 
