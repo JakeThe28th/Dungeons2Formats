@@ -277,3 +277,42 @@ function gui_draw_dropdown(x1, y1, x2, y2, ds, values, text, menu) {
 	ds_map_set(values, "open", open)
 	return values
 	}
+	
+function gui_draw_checklist(x1, y1, x2, y2, ds, values, menu) {
+	var color = ds_map_find_value(values, "color")
+	var hovercolor = ds_map_find_value(values, "hovercolor")
+	var text_col = ds_map_find_value(values, "text_color")
+	var selected = ds_map_find_value(values, "selected")
+	
+	draw_rectangle_color(x1, y1, x2, y2,color,color,color,color,false)
+	
+	var y_change = 0
+	var i = 0
+	repeat ds_list_size(ds) {
+		var check_string = "[ ] " + ds[| i]
+		if ds_list_find_index(selected, i) >=0 {
+			check_string = "[x] " + ds[| i]
+			}
+			
+		if point_in_area(x1, y1+y_change, x2, y1+y_change+25, mouse_x, mouse_y) {
+			draw_rectangle_color(x1, y1+y_change, x2, y1+y_change+25,hovercolor,hovercolor,hovercolor,hovercolor,false)
+			
+			if mouse_check_button_released(mb_left) {
+			var entry = ds_list_find_index(selected, i)
+			if entry >=0 {
+				ds_list_delete(selected, entry) 
+				
+			} else ds_list_add(selected, i)
+			}
+		}
+		
+		
+		draw_set_valign(fa_top)
+		draw_text(x1, y1+y_change, check_string)
+		
+		i++
+		y_change += 25
+		}
+		
+		return values
+}

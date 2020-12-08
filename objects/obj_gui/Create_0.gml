@@ -38,8 +38,19 @@ ds_map_add(objects_dropdown_values, "scr_barcolor", col_normal)
 ds_map_add(objects_dropdown_values, "scr_thumbcolor", col_dark)
 ds_map_add(objects_dropdown_values, "scroll_amount", 0)
 ds_map_add(objects_dropdown_values, "scroll", false)
-ds_map_add(level_dropdown_values, "selected", 0)
+ds_map_add(objects_dropdown_values, "selected", 0)
 
+
+filetype_checklist_values = ds_map_create()
+ds_filetype = ds_list_create()
+ds_map_add(filetype_checklist_values, "color", col_dark)
+ds_map_add(filetype_checklist_values, "hovercolor", col_superdark)
+ds_map_add(filetype_checklist_values, "text_color", col_txt)
+ds_map_add(filetype_checklist_values, "selected", ds_list_create())
+
+ds_filetype[| 0] = ".obj / .mtl"
+ds_filetype[| 1] = ".nbt"
+ds_filetype[| 2] = ".mca"
 
 
 tile_list_values = ds_map_create()
