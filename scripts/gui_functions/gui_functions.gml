@@ -287,15 +287,29 @@ function gui_draw_checklist(x1, y1, x2, y2, ds, values, menu) {
 	draw_rectangle_color(x1, y1, x2, y2,color,color,color,color,false)
 	
 	var y_change = 0
+	var x_change = 0
+	var longest_entry = 0
 	var i = 0
 	repeat ds_list_size(ds) {
 		var check_string = "[ ] " + ds[| i]
 		if ds_list_find_index(selected, i) >=0 {
 			check_string = "[x] " + ds[| i]
 			}
-			
-		if point_in_area(x1, y1+y_change, x2, y1+y_change+25, mouse_x, mouse_y) {
-			draw_rectangle_color(x1, y1+y_change, x2, y1+y_change+25,hovercolor,hovercolor,hovercolor,hovercolor,false)
+		
+		
+		if string_width(check_string) > longest_entry longest_entry = string_width(check_string)
+		
+		if y1+y_change + 25 > y2 { 
+			y_change = 0
+			x_change += longest_entry + 5
+			longest_entry = 0
+			draw_rectangle_color(x1+x_change, y1, x2, y2,color,color,color,color,false)
+			}
+
+		
+		
+		if point_in_area(x1+x_change, y1+y_change, x1+string_width(check_string)+x_change, y1+y_change+25, mouse_x, mouse_y) {
+			draw_rectangle_color(x1+x_change, y1+y_change, x2, y1+y_change+25,hovercolor,hovercolor,hovercolor,hovercolor,false)
 			
 			if mouse_check_button_released(mb_left) {
 			var entry = ds_list_find_index(selected, i)
@@ -308,7 +322,7 @@ function gui_draw_checklist(x1, y1, x2, y2, ds, values, menu) {
 		
 		
 		draw_set_valign(fa_top)
-		draw_text(x1, y1+y_change, check_string)
+		draw_text(x1+x_change, y1+y_change, check_string)
 		
 		i++
 		y_change += 25

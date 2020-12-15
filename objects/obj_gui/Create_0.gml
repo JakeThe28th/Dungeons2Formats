@@ -47,10 +47,22 @@ ds_map_add(filetype_checklist_values, "color", col_dark)
 ds_map_add(filetype_checklist_values, "hovercolor", col_superdark)
 ds_map_add(filetype_checklist_values, "text_color", col_txt)
 ds_map_add(filetype_checklist_values, "selected", ds_list_create())
-
 ds_filetype[| 0] = ".obj / .mtl"
-ds_filetype[| 1] = ".nbt"
-ds_filetype[| 2] = ".mca"
+
+export_options_values = ds_map_create()
+ds_exportoptions = ds_list_create()
+ds_map_add(export_options_values, "color", col_dark)
+ds_map_add(export_options_values, "hovercolor", col_superdark)
+ds_map_add(export_options_values, "text_color", col_txt)
+ds_map_add(export_options_values, "selected", ds_list_create())
+ds_exportoptions[| 0] = "Hidden blocks"
+ds_exportoptions[| 1] = "Hidden faces"
+ds_exportoptions[| 2] = "Bushy leaves"
+ds_exportoptions[| 3] = "Doors"
+ds_exportoptions[| 4] = "Decorations"
+ds_exportoptions[| 5] = "Generate texture sheet"
+ds_exportoptions[| 6] = "Generate materials"
+ds_exportoptions[| 7] = "Seperate blocks"
 
 
 tile_list_values = ds_map_create()

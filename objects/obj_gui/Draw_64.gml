@@ -20,6 +20,9 @@ objects_dropdown_values = gui_draw_dropdown(vw/3+10, 15, vw/3+(vw/3-10), 75, obj
 draw_rectangle_color((vw/3)*2, (vh/2), vw-5, vh-5, col_normal,col_normal,col_normal,col_normal,false)
 filetype_checklist_values = gui_draw_checklist(((vw/3)*2)+5, (vh/2)+5, vw-10, vh-10, ds_filetype, filetype_checklist_values, "fileTypeChecklist")
 
+draw_rectangle_color(5, (vh/2), ((vw/3)*2)-5, vh-(vh/3), col_normal,col_normal,col_normal,col_normal,false)
+export_options_values = gui_draw_checklist(10, (vh/2), ((vw/3)*2)-5, vh-(vh/3)-5, ds_exportoptions, export_options_values, "exportOptionsChecklist")
+
 update_level(level_dropdown_values[? "selected_name"])
 update_group(objects_dropdown_values[? "selected"])
 

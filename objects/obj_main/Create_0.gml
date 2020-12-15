@@ -1,3 +1,5 @@
+macros()
+
 global.ds_map_list = ds_list_create()
 
 global.filter = false
