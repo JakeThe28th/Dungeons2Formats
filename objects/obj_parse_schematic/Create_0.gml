@@ -48,9 +48,9 @@ nbt_ds_list = ds_list_create()
 			//Add tag info
 		#endregion
 
-		xsize = json_get(obj_gui.selected_group, "objects", obj_gui.selected_object, "size", 0)
-		ysize = json_get(obj_gui.selected_group, "objects", obj_gui.selected_object, "size", 1)
-		zsize = json_get(obj_gui.selected_group, "objects", obj_gui.selected_object, "size", 2)
+		xsize = json_get(global.group_json, "objects", global.selected_object, "size", 0)
+		ysize = json_get(global.group_json, "objects", global.selected_object, "size", 1)
+		zsize = json_get(global.group_json, "objects", global.selected_object, "size", 2)
 		#region X size Tag
 		var temp = ds_map_create()
 			ds_list_add(nbt_ds_list, temp)
@@ -122,7 +122,7 @@ nbt_ds_list = ds_list_create()
 		miblockdata = array_create(xsize*ysize*zsize, 0)
 		//Init variables for later
 		
-		var blockstring = json_get(obj_gui.selected_group, "objects", obj_gui.selected_object, "blocks") //Open
+		var blockstring = json_get(global.group_json, "objects", global.selected_object, "blocks") //Open
 		var block_buffer_compressed = buffer_base64_decode(blockstring) //Base64 decode
 		var block_buffer_decompressed = buffer_decompress(block_buffer_compressed) //Decompress
 		

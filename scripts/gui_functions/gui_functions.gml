@@ -6,11 +6,12 @@ function gui_draw_button(x1, y1, x2, y2, color, hovercolor, text, px, py, menu) 
 	var state = false
 	
 	
-	if point_in_area(x1, y1, x2, y2, px, py) {
+	if point_in_area(x1, y1, x2, y2, px, py) and grayed_out_buttons = false {
 		if mouse_check_button_released(mb_left) state = true
-		if global.current_menu = menu or menu = false {
+		if global.current_menu = menu or global.current_menu = false {
 		//draw_rectangle_color(x1, y1, x2, y2, color, color, color, color, false) 
-		draw_rectangle_color(x1, y1, x2, y2, hovercolor, merge_color(hovercolor, color, .75), merge_color(hovercolor, color, .75), hovercolor, false) 
+		var merge = merge_color(hovercolor, color, .75)
+		draw_rectangle_color(x1, y1, x2, y2, hovercolor, merge, merge, hovercolor, false) 
 		}
 		} else {
 			draw_rectangle_color(x1, y1, x2, y2, color, color, color, color, false) 
@@ -108,6 +109,7 @@ function gui_draw_ds_list(x1, y1, x2, y2, values, ds, dungeons, menu) {
 		
 		} until b_size_x >= min_size
 	
+		b_size_x+=40 // For S:number
 		
 
 		var ix = 0
@@ -152,7 +154,8 @@ function gui_draw_ds_list(x1, y1, x2, y2, values, ds, dungeons, menu) {
 				}	
 			
 			if dungeons = "dungeons" {
-				if gui_draw_button(t_x1_inc, t_y1_inc, t_x2_inc, t_y2_inc, c, c_h, ds_map_find_value(ds[| i], "id"), mx, my, menu) {
+				var drawText = ds_map_find_value(ds[| i], "id") + " S:" + string(json_get(global.group_json, "objects", i, "size", 0)*json_get(global.group_json, "objects", i, "size", 1)*json_get(global.group_json, "objects", i, "size", 2))
+				if gui_draw_button(t_x1_inc, t_y1_inc, t_x2_inc, t_y2_inc, c, c_h, drawText, mx, my, menu) {
 					ds_map_set(values, "selected", i)
 					ds_map_set(values, "selected_name", ds_map_find_value(ds[| i], "id"))
 					}
@@ -196,7 +199,7 @@ function gui_draw_dropdown(x1, y1, x2, y2, ds, values, text, menu) {
 	//Toggle open/closed
 	if gui_draw_button(x1, y1, x2, y2, color, hovercolor, text, mouse_x, mouse_y, 0) {
 		switch(open) {
-			case true: open = false; global.current_menu = "tiles";break;
+			case true: open = false; global.current_menu = false;break;
 			case false: open = true; global.current_menu = menu; break;
 			}
 		}
@@ -211,9 +214,10 @@ function gui_draw_dropdown(x1, y1, x2, y2, ds, values, text, menu) {
 	repeat(ds_list_size(ds)) { if string_width(ds[| i]) > maxstringwidth maxstringwidth = string_width(ds[| i]); i++ }
 	
 	//Set the dimensions to fit the text.
-	open_y2 = y2 + ((string_height(ds[| 0])+10)*ds_list_size(ds))
+	open_y2 = y2 + ((string_height(ds[| 0])+10)*ds_list_size(ds)) + 10
 	if open_y2 < y2+300 open_x2 = x1+ maxstringwidth +30
 	
+	if open_x2 < x2 open_x2 = x2
 	
 	//Transition
 	//var transition = false
@@ -266,7 +270,7 @@ function gui_draw_dropdown(x1, y1, x2, y2, ds, values, text, menu) {
 		
 	if mouse_check_button_released(mb_left) and !point_in_area(x1, y1, open_x2, open_y2, mouse_x, mouse_y) { 
 		open = false; 
-		if global.current_menu = menu then global.current_menu = "tiles";
+		if global.current_menu = menu then global.current_menu = false;
 		
 		//if global.current_menu != menu open = false
 		//TEMP while i figure out how to use dynamic lengths with out of bounds clicking
@@ -307,8 +311,8 @@ function gui_draw_checklist(x1, y1, x2, y2, ds, values, menu) {
 			}
 
 		
-		
-		if point_in_area(x1+x_change, y1+y_change, x1+string_width(check_string)+x_change, y1+y_change+25, mouse_x, mouse_y) {
+		if global.current_menu = menu or global.current_menu = false {
+		if point_in_area(x1+x_change, y1+y_change, x1+string_width(check_string)+x_change, y1+y_change+25, mouse_x, mouse_y) and grayed_out_buttons = false {
 			draw_rectangle_color(x1+x_change, y1+y_change, x2, y1+y_change+25,hovercolor,hovercolor,hovercolor,hovercolor,false)
 			
 			if mouse_check_button_released(mb_left) {
@@ -319,7 +323,7 @@ function gui_draw_checklist(x1, y1, x2, y2, ds, values, menu) {
 			} else ds_list_add(selected, i)
 			}
 		}
-		
+		}
 		
 		draw_set_valign(fa_top)
 		draw_text(x1+x_change, y1+y_change, check_string)

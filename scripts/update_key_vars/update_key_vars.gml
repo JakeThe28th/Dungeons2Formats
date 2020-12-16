@@ -4,6 +4,7 @@ function update_group(group_entry) {
 	if group_entry != global.selected_group {
 	global.selected_group = group_entry
 	ds = json_get(json_load(ma_lovika + "objectgroups\\" + json_get(global.level_json, "object-groups", global.selected_group) + ".json"), "objects")
+	global.group_json = json_get(json_load(ma_lovika + "objectgroups\\" + json_get(global.level_json, "object-groups", global.selected_group) + ".json"))
 	}
 }
 
@@ -17,6 +18,11 @@ if global.current_level != level_name {
 	global.level_json = obj_load_level.json
 	ds = json_get(json_load(ma_lovika + "objectgroups\\" + json_get(global.level_json, "object-groups", global.selected_group) + ".json"), "objects")
 	
+	
 	obj_ds = json_get(global.level_json, "object-groups")
 	}
 }
+
+function update_object(object_entry) {
+	global.selected_object = object_entry
+	}

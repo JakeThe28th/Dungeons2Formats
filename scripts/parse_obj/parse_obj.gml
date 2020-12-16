@@ -65,7 +65,10 @@ function parse_obj() {
 				
 			#endregion
 			}
-	
+		
+		//If full block culling is off force it to make the block
+		if ds_list_find_index(ds_map_find_value(obj_gui.export_options_values, "selected"), 0) < 0 sides = 1
+		
 		if block_byte != 0 and sides > 0 {
 	
 			#region Get blockstate ID
@@ -114,7 +117,7 @@ function parse_obj() {
 				dungeons_id = "dungeons"
 			
 				//Check if we've already made a json for this block. If not, make one.
-				var template_model_out = working_directory + global.current_resource_pack + + "\\" + string_replace_all(current_block_name, "dungeonmaster:LEVELNAME/", "dungeons_") + ".json"
+				var template_model_out = ma_json_directory + global.current_resource_pack + + "\\" + string_replace_all(current_block_name, "dungeonmaster:LEVELNAME/", "dungeons_") + ".json"
 				
 				if !file_exists(template_model_out) {
 				
@@ -400,7 +403,7 @@ function parse_obj() {
 			blocks_created++
 			obj_create_block(ds, text_file_buffer, vertice_count, vertice_texture_count, bds, mtloutput, mat_map, dungeons_id)
 			
-			if string_pos("leaves", current_block_name) > 0 and leaf_sides > 0 {
+			if string_pos("leaves", current_block_name) > 0 and leaf_sides > 0 and ds_list_find_index(ds_map_find_value(obj_gui.export_options_values, "selected"), 2) > -1 {
 				var leaf_id = string_replace(current_block_name, "dungeonmaster:LEVELNAME/", "") + "_outer"
 				if !ds_map_exists(mat_map, leaf_id) {
 				ds_map_add(mat_map, leaf_id, leaf_id)

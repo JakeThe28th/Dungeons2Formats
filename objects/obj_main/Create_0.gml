@@ -18,6 +18,8 @@ global.level_array = dng_levels_list()
 instance_create_depth(0, 0, 1, obj_load_level)
 global.level_json = obj_load_level.json
 
+global.group_json = json_get(json_load(ma_lovika + "objectgroups\\" + json_get(global.level_json, "object-groups", global.selected_group) + ".json"))
+
 instance_create_depth(0, 0, 1, obj_gui)
 
 

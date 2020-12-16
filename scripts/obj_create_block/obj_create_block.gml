@@ -98,7 +98,7 @@ function obj_create_block(ds_map, buffer, v_count, vt_count, surrounding, mtl, m
 		
 		//Otherwise, find this model's parent and use the elements there.
 		var parent = ds_map_find_value(ds_map, "parent")
-		var text = util_file_to_string("C:\\Users\\nickl\\Desktop\\OBJTest\\models\\" + string_replace(string_replace(parent, "minecraft:", ""), "/", "\\") + ".json")
+		var text = util_file_to_string(ma_models_directory + string_replace(string_replace(parent, "minecraft:", ""), "/", "\\") + ".json")
 			ds_map_destroy(ds_map)
 			ds_map = json_decode(text)
 	
@@ -259,7 +259,7 @@ function obj_create_block(ds_map, buffer, v_count, vt_count, surrounding, mtl, m
 			
 				//Set the material for this face.
 		
-			if ds_map_find_value(surrounding, current_face) = 0 and ds_map_exists(temp, "cullface") and culling = 1 {
+			if ds_map_find_value(surrounding, current_face) = 0 and ds_map_exists(temp, "cullface") and ds_list_find_index(ds_map_find_value(obj_gui.export_options_values, "selected"), 1) > -1 {
 					//debug_log("MC2OBJ", "Culled face " + current_face + " " + string(ds_map_find_value(surrounding, current_face)))
 				} else {
 			

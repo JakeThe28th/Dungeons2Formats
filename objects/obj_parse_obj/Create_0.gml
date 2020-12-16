@@ -1,13 +1,18 @@
 	
+		if is_undefined(global.selected_object) {
+			show_error("You need to select a tile first", false)
+			instance_destroy()
+			}
+	
 		//Get the block buffers
-		var blockstring = json_get(obj_gui.selected_group, "objects", obj_gui.selected_object, "blocks") //Open
+		var blockstring = json_get(global.group_json, "objects", global.selected_object, "blocks") //Open
 		var block_buffer_compressed = buffer_base64_decode(blockstring) //Base64 decode
 		var block_buffer_decompressed = buffer_decompress(block_buffer_compressed) //Decompress
 		
 		//Get the size of the structure
-		xsize = json_get(obj_gui.selected_group, "objects", obj_gui.selected_object, "size", 0)
-		ysize = json_get(obj_gui.selected_group, "objects", obj_gui.selected_object, "size", 1)
-		zsize = json_get(obj_gui.selected_group, "objects", obj_gui.selected_object, "size", 2)
+		xsize = json_get(global.group_json, "objects", global.selected_object, "size", 0)
+		ysize = json_get(global.group_json, "objects", global.selected_object, "size", 1)
+		zsize = json_get(global.group_json, "objects", global.selected_object, "size", 2)
 		
 		//Split block data and block states into seperate buffers
 		blockdata = buffer_create(xsize*ysize*zsize, buffer_fixed, 1)
