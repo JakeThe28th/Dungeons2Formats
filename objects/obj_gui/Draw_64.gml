@@ -46,6 +46,8 @@ update_level(level_dropdown_values[? "selected_name"])
 update_group(objects_dropdown_values[? "selected"])
 update_object(tile_list_values[? "selected"])
 
+prevlevel = global.current_level
+
 
 
 

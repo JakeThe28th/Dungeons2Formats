@@ -1,1 +1,4 @@
 Thanks to Tastac, IP, and Ocelot for providing help, and conversion maps! (Without them i wouldn't even know how to read block data!)
+Thanks to CCCode for giving me the dungeons bushy leaves model!
+
+File.dll was made by david norgren and is from mine-imator.

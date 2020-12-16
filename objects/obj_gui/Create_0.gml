@@ -2,6 +2,8 @@
 global.gui_ds = ds_map_create()
 gui_functions()
 
+prevlevel = global.current_level
+
 grayed_out_buttons = false
 
 ds_levels = ds_list_create()

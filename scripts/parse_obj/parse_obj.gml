@@ -116,8 +116,14 @@ function parse_obj() {
 			if string_pos("dungeonmaster", current_block_name) !=0 {
 				dungeons_id = "dungeons"
 			
-				//Check if we've already made a json for this block. If not, make one.
-				var template_model_out = ma_json_directory + global.current_resource_pack + + "\\" + string_replace_all(current_block_name, "dungeonmaster:LEVELNAME/", "dungeons_") + ".json"
+				
+				//Check if the filter contains a model for this block. If not,
+				if !file_exists(ma_filters +  global.current_resource_pack + "\\models" +string_replace_all(current_block_name, "dungeonmaster:LEVELNAME/", "dungeons_") + ".json") {
+					
+					//Check if we've already made a json for this block. If not, make one.
+					var template_model_out = ma_json_directory + global.current_resource_pack + + "\\" + string_replace_all(current_block_name, "dungeonmaster:LEVELNAME/", "dungeons_") + ".json"
+					} else { template_model_out = ma_filters +  global.current_resource_pack + "\\models" +string_replace_all(current_block_name, "dungeonmaster:LEVELNAME/", "dungeons_") + ".json" }
+				
 				
 				if !file_exists(template_model_out) {
 				

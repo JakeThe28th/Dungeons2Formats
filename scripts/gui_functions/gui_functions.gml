@@ -109,12 +109,8 @@ function gui_draw_ds_list(x1, y1, x2, y2, values, ds, dungeons, menu) {
 		
 		} until b_size_x >= min_size
 	
-		b_size_x+=40 // For S:number
+		if dungeons = "dungeons" b_size_x+=40 // For S:number
 		
-
-		var ix = 0
-		var iy = 0
-		var i = 0
 		#endregion
 		
 		draw_rectangle_color(t_x1, t_y1, t_x2, w_t_y2, c,c,c,c, false)
@@ -131,6 +127,9 @@ function gui_draw_ds_list(x1, y1, x2, y2, values, ds, dungeons, menu) {
 		//		var b = "a"
 		//		}
 		
+		var ix = 0
+		var iy = 0
+		var i = 0
 		repeat ds_list_size(ds) {
 			if (t_y1+(b_size_y*(iy+1))-5) >= w_t_y2 {
 				iy=  0
@@ -154,7 +153,7 @@ function gui_draw_ds_list(x1, y1, x2, y2, values, ds, dungeons, menu) {
 				}	
 			
 			if dungeons = "dungeons" {
-				var drawText = ds_map_find_value(ds[| i], "id") + " S:" + string(json_get(global.group_json, "objects", i, "size", 0)*json_get(global.group_json, "objects", i, "size", 1)*json_get(global.group_json, "objects", i, "size", 2))
+				var drawText = ds_map_find_value(ds[| i], "id") + " S:" + string(ds_map_find_value(ds[| i], "size")[| 0]*ds_map_find_value(ds[| i], "size")[| 1]*ds_map_find_value(ds[| i], "size")[| 2])
 				if gui_draw_button(t_x1_inc, t_y1_inc, t_x2_inc, t_y2_inc, c, c_h, drawText, mx, my, menu) {
 					ds_map_set(values, "selected", i)
 					ds_map_set(values, "selected_name", ds_map_find_value(ds[| i], "id"))

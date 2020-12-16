@@ -8,7 +8,7 @@ global.current_resource_pack = "squidcoast"
 global.current_level = "squidcoast"
 
 
-global.selected_level = "squidcoast"
+//global.selected_level = "squidcoast"
 global.selected_group = 0
 global.selected_object = 0
 
@@ -22,5 +22,6 @@ global.group_json = json_get(json_load(ma_lovika + "objectgroups\\" + json_get(g
 
 instance_create_depth(0, 0, 1, obj_gui)
 
+debug_log("INFO", ma_directory)
 
 

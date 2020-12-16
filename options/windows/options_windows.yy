@@ -1,7 +1,7 @@
 {
   "option_windows_display_name": "Minecraft Dungeons Level Viewer",
   "option_windows_executable_name": "${project_name}",
-  "option_windows_version": "2.2.0.0",
+  "option_windows_version": "2.3.0.0",
   "option_windows_company_info": "4FS",
   "option_windows_product_info": "MC:D Level Viewer",
   "option_windows_copyright_info": "(c) 2020 4FS",
@@ -27,7 +27,7 @@
   "option_windows_nsis_file": "${base_options_dir}/windows/installer/nsis_script.nsi",
   "option_windows_enable_steam": false,
   "option_windows_disable_sandbox": true,
-  "option_windows_steam_use_alternative_launcher": true,
+  "option_windows_steam_use_alternative_launcher": false,
   "resourceVersion": "1.0",
   "name": "Windows",
   "tags": [],
