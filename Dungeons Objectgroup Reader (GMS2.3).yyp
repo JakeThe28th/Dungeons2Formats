@@ -69,6 +69,7 @@
     {"id":{"name":"Mineimator schematic loader script","path":"notes/Mineimator schematic loader script/Mineimator schematic loader script.yy",},"order":0,},
     {"id":{"name":"Mine-Imator Loop","path":"notes/Mine-Imator Loop/Mine-Imator Loop.yy",},"order":1,},
     {"id":{"name":"Dungeonmaster blocks - MI","path":"notes/Dungeonmaster blocks - MI/Dungeonmaster blocks - MI.yy",},"order":2,},
+    {"id":{"name":"mc2obj_functions","path":"scripts/mc2obj_functions/mc2obj_functions.yy",},"order":19,},
     {"id":{"name":"gui_functions","path":"scripts/gui_functions/gui_functions.yy",},"order":16,},
     {"id":{"name":"Dungeons Specification","path":"notes/Dungeons Specification/Dungeons Specification.yy",},"order":3,},
     {"id":{"name":"BLOCK BUFFER MATH","path":"notes/BLOCK BUFFER MATH/BLOCK BUFFER MATH.yy",},"order":4,},
@@ -92,7 +93,9 @@
     "name": "Default",
     "children": [],
   },
-  "RoomOrder": [],
+  "RoomOrderNodes": [
+    {"roomId":{"name":"room0","path":"rooms/room0/room0.yy",},},
+  ],
   "Folders": [
     {"folderPath":"folders/Sprites.yy","order":0,"resourceVersion":"1.0","name":"Sprites","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/Tile Sets.yy","order":10,"resourceVersion":"1.0","name":"Tile Sets","tags":[],"resourceType":"GMFolder",},
@@ -116,7 +119,7 @@
     {"targets":461609314234257646,"resourceVersion":"1.0","name":"audiogroup_default","resourceType":"GMAudioGroup",},
   ],
   "TextureGroups": [
-    {"isScaled":true,"autocrop":true,"border":2,"mipsToGenerate":0,"targets":461609314234257646,"resourceVersion":"1.0","name":"Default","resourceType":"GMTextureGroup",},
+    {"isScaled":true,"autocrop":true,"border":2,"mipsToGenerate":0,"groupParent":null,"targets":461609314234257646,"resourceVersion":"1.0","name":"Default","resourceType":"GMTextureGroup",},
   ],
   "IncludedFiles": [
     {"CopyToMask":-1,"filePath":"datafiles","resourceVersion":"1.0","name":"1.15.1.midata","resourceType":"GMIncludedFile",},
@@ -129,9 +132,9 @@
     {"CopyToMask":-1,"filePath":"datafiles","resourceVersion":"1.0","name":"readme.txt","resourceType":"GMIncludedFile",},
   ],
   "MetaData": {
-    "IDEVersion": "2.3.0.529",
+    "IDEVersion": "2.3.1.536",
   },
-  "resourceVersion": "1.3",
+  "resourceVersion": "1.4",
   "name": "Dungeons Objectgroup Reader (GMS2.3)",
   "tags": [],
   "resourceType": "GMProject",

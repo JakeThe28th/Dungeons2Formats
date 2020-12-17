@@ -3,7 +3,7 @@ function macros() {
 //#macro debug true
 #macro performance_mode false
 
-#macro ma_directory working_directory
+#macro ma_directory program_directory
 #macro ma_blockstates_directory ma_directory + "data_mc\\blockstates\\"
 #macro ma_models_directory ma_directory + "data_mc\\models\\"
 #macro ma_textures_directory ma_directory + "data_mc\\textures\\"
@@ -13,7 +13,7 @@ function macros() {
 #macro ma_resourcepacks ma_directory + "data\\resourcepacks\\"
 #macro ma_missionlist ma_data + "missionsToKeepInPackage.txt"
 
-#macro ma_log + "log.txt"
+#macro ma_log ma_directory + "log.txt"
 
 #macro ma_json_directory ma_directory + "generated\\"
 #macro ma_filters ma_directory + "filters\\"

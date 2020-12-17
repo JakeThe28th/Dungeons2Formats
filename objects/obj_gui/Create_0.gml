@@ -1,6 +1,6 @@
 //Init GUI Builder functions
 global.gui_ds = ds_map_create()
-gui_functions()
+//gui_functions() Error with YYC
 
 prevlevel = global.current_level
 
