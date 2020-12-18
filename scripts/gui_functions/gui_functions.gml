@@ -79,8 +79,8 @@ function gui_draw_ds_list(x1, y1, x2, y2, values, ds, dungeons, menu) {
 		}
 	
 		#region button size
-		var divideby = 8
-		var min_size = 20
+		var divideby = gui_max_divide
+		var min_size = gui_min_ds_text_size
 		do {
 			//Divide the size to fit it into the bounds
 			var b_size_y = (w_t_y2-t_y1)/divideby 
@@ -213,8 +213,8 @@ function gui_draw_dropdown(x1, y1, x2, y2, ds, values, text, menu) {
 	repeat(ds_list_size(ds)) { if string_width(ds[| i]) > maxstringwidth maxstringwidth = string_width(ds[| i]); i++ }
 	
 	//Set the dimensions to fit the text.
-	open_y2 = y2 + ((string_height(ds[| 0])+10)*ds_list_size(ds)) + 10
-	if open_y2 < y2+300 open_x2 = x1+ maxstringwidth +30
+	open_y2 = y1 + ((string_height(ds[| 0])+10)*ds_list_size(ds)) + 10
+	//if open_y2 < y2+300 open_x2 = x1+ maxstringwidth +30
 	
 	if open_x2 < x2 open_x2 = x2
 	

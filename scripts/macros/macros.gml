@@ -3,7 +3,8 @@ function macros() {
 //#macro debug true
 #macro performance_mode false
 
-#macro ma_directory program_directory
+#macro ma_directory working_directory
+//#macro ma_directory program_directory
 #macro ma_blockstates_directory ma_directory + "data_mc\\blockstates\\"
 #macro ma_models_directory ma_directory + "data_mc\\models\\"
 #macro ma_textures_directory ma_directory + "data_mc\\textures\\"
@@ -48,5 +49,8 @@ if !directory_exists(ma_filters) {
 #macro col_light make_color_hsv(216*0.70833333333, 19*2.55, 100*2.55)
 #macro col_txt c_white
 #macro col_loading_done make_color_hsv(134*0.70833333333, 54*2.55, 80*2.55)
+
+#macro gui_max_divide 12
+#macro gui_min_ds_text_size 30
 
 }

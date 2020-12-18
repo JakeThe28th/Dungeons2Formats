@@ -44,7 +44,6 @@
     {"id":{"name":"read_tag_byte","path":"scripts/read_tag_byte/read_tag_byte.yy",},"order":20,},
     {"id":{"name":"tag_end","path":"scripts/tag_end/tag_end.yy",},"order":21,},
     {"id":{"name":"nbt_start_write","path":"scripts/nbt_start_write/nbt_start_write.yy",},"order":22,},
-    {"id":{"name":"mc2obj_build_model","path":"scripts/mc2obj_build_model/mc2obj_build_model.yy",},"order":15,},
     {"id":{"name":"obj_gui","path":"objects/obj_gui/obj_gui.yy",},"order":11,},
     {"id":{"name":"nbt_start","path":"scripts/nbt_start/nbt_start.yy",},"order":23,},
     {"id":{"name":"parse_schematic","path":"scripts/parse_schematic/parse_schematic.yy",},"order":6,},

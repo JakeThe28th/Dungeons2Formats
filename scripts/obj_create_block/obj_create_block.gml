@@ -15,73 +15,19 @@ function obj_create_block(ds_map, buffer, v_count, vt_count, surrounding, mtl, m
 	var model_texture_ds = ds_map_create()
 		var temp = ds_map_find_first(textures)
 		repeat ds_map_size(textures) {
-		
 			ds_map_add(model_texture_ds, "#" + temp, ds_map_find_value(textures, temp))
 		
-			if !ds_map_exists(mat_map, ds_map_find_value(textures, temp)) {
-				ds_map_add(mat_map, ds_map_find_value(textures, temp), ds_map_find_value(textures, temp))
-			
 			if dungeons_id != "dungeons" {
-			#region mtl nonsense
-				file_text_write_string(mtl, "newmtl " + ds_map_find_value(textures, temp))
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "# Ns 0")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "# Ka 0.2 0.2 0.2")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "Kd 1 1 1")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "Ks 0 0 0")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "# map_Ka " + "textures/" + string_replace(ds_map_find_value(textures, temp), "minecraft:", "") + ".png")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "# for G3D, to make textures look blocky:")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "map_Kd " + "textures/" + string_replace(ds_map_find_value(textures, temp), "minecraft:", "") + ".png")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "# illum 2")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "# d 1")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "# Tr 0")
-				file_text_writeln(mtl)
-				file_text_writeln(mtl)
-				file_text_writeln(mtl)
-			#endregion
+				//var texture_name = string_replace(ds_map_find_value(textures, temp), "minecraft:", "")
+				texture_name = ds_map_find_value(textures, temp)
+				
+				mc2obj_mtl(mtl, mat_map, texture_name, "textures/" + texture_name + ".png")
 				} else {
-					#region mtl nonsense
-				file_text_write_string(mtl, "newmtl " + ds_map_find_value(textures, temp))
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "# Ns 0")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "# Ka 0.2 0.2 0.2")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "Kd 1 1 1")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "Ks 0 0 0")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "# map_Ka " + "resourcepacks\\" + global.current_resource_pack + "\\images\\blocks\\" +string_replace(ds_map_find_value(textures, temp), "minecraft:block/", "") + ".png")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "# for G3D, to make textures look blocky:")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "map_Kd " + "resourcepacks\\" + global.current_resource_pack + "\\images\\blocks\\" +string_replace(ds_map_find_value(textures, temp), "minecraft:block/", "") + ".png")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "# illum 2")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "# d 1")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "# Tr 0")
-				file_text_writeln(mtl)
-				file_text_writeln(mtl)
-				file_text_writeln(mtl)
-			#endregion
-					}
+					//var texture_name = string_replace(ds_map_find_value(textures, temp), "minecraft:", "")
+					var texture_name = ds_map_find_value(textures, temp)
 					
-				}			
+					mc2obj_mtl(mtl, mat_map, texture_name, "# map_Ka " + "resourcepacks\\" + string_lower(global.current_resource_pack) + "\\images\\blocks\\" + texture_name + ".png")
+					}			
 		
 			temp = ds_map_find_next(textures, temp)
 			}
