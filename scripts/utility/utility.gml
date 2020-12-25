@@ -62,8 +62,8 @@ function util_ds_path(ds, seperator, path, type) {
 		
 		try {
 			path[i] = real(path[i])
-			} catch (e) {
-				
+			} catch (error) {
+				var error = "caught"
 				}
 		
 		if type = "both" {
@@ -107,9 +107,9 @@ function util_ds_path(ds, seperator, path, type) {
 }
 	
 	
-function textfile_copy_replace(file, phrase, newphrase, output) {
-	var file = file_text_open_read(file)
-	var output = file_text_open_write(output)
+function textfile_copy_replace(file_, phrase, newphrase, output_) {
+	var file = file_text_open_read(file_)
+	var output = file_text_open_write(output_)
 
 	do { 
 		var current_line = file_text_read_string(file)

@@ -1,159 +1,90 @@
-function obj_create_block(ds_map, buffer, v_count, vt_count, surrounding, mtl, mat_map, dungeons_id) {
+function obj_create_block(bx, by, bz, json, buffer, v_count, vt_count, cullfaces, mtl, mat_map) {
+		var json_ds = json_load(json)
 	
-	if !ds_map_exists(ds_map, "textures") {
-		if dungeons_id = 0 {
-			debug_log("MC2OBJ", "Model is missing textures!")
-			show_error("Model has no textures!", false)
-			return -1
-			} else {
-				//Minecraft dungeons texture handling.
+		//Parent Handling
+		do {
+			//Load the parent's DS.
+			var parent = json_load(ma_models_directory + string_replace(json_ds[? "parent"], "minecraft:",""))
+			
+			//Replace the json's elements with the parent's elements.
+			if ds_map_exists(parent, "elements") { 
+				ds_map_delete(json_ds, "elements")
+				ds_map_add_map(json_ds, "elements", parent[? "elements"])
 				}
-		}
-	
-	//Get texture shorthands (eg #top)
-	var textures = ds_map_find_value(ds_map, "textures")
-	var model_texture_ds = ds_map_create()
-		var temp = ds_map_find_first(textures)
-		repeat ds_map_size(textures) {
-			ds_map_add(model_texture_ds, "#" + temp, ds_map_find_value(textures, temp))
-		
-			if dungeons_id != "dungeons" {
-				//var texture_name = string_replace(ds_map_find_value(textures, temp), "minecraft:", "")
-				texture_name = ds_map_find_value(textures, temp)
 				
-				mc2obj_mtl(mtl, mat_map, texture_name, "textures/" + texture_name + ".png")
-				} else {
-					//var texture_name = string_replace(ds_map_find_value(textures, temp), "minecraft:", "")
-					var texture_name = ds_map_find_value(textures, temp)
+				
+			//Find textures from the parent and add them to the json.
+			if ds_map_exists(parent, "textures") { 
+				//Get the textures DS
+				var textures = ds_map_find_value(parent, "textures")
+				
+				var iTex = ds_map_find_first(textures) //First parent texture
+				repeat ds_map_size(parent[? "textures"]) {
 					
-					mc2obj_mtl(mtl, mat_map, texture_name, "# map_Ka " + "resourcepacks\\" + string_lower(global.current_resource_pack) + "\\images\\blocks\\" + texture_name + ".png")
-					}			
-		
-			temp = ds_map_find_next(textures, temp)
-			}
-
-
-	if !ds_map_exists(ds_map, "elements") {
-		do { 
-		if !ds_map_exists(ds_map, "parent") {
-			//If there's no parent, throw an error and exit script.
-			debug_log("MC2OBJ", "Model is missing elements! '" + current_block + "'")
-			//show_error("Model has no elements!", false)
-			return -1
-			}
-		
-		//Otherwise, find this model's parent and use the elements there.
-		var parent = ds_map_find_value(ds_map, "parent")
-		var text = util_file_to_string(ma_models_directory + string_replace(string_replace(parent, "minecraft:", ""), "/", "\\") + ".json")
-			ds_map_destroy(ds_map)
-			ds_map = json_decode(text)
-	
-
-
-		//Get texture shorthands (eg #top)
-		if ds_map_exists(ds_map, "textures") {
-		var textures = ds_map_find_value(ds_map, "textures")
-	
-		var temp = ds_map_find_first(textures)
-	
-			repeat ds_map_size(textures) {
-				if ds_map_exists(model_texture_ds, ds_map_find_value(textures, temp)) {
-					var tex_temp = ds_map_find_value(model_texture_ds, ds_map_find_value(textures, temp))
-					} else {
-						var tex_temp = ds_map_find_value(textures, temp)
-					
-						if !ds_map_exists(mat_map, ds_map_find_value(textures, temp)) {
-						ds_map_add(mat_map, ds_map_find_value(textures, temp), ds_map_find_value(textures, temp))
-			
-					#region mtl nonsense
-				file_text_write_string(mtl, "newmtl " + ds_map_find_value(textures, temp))
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "# Ns 0")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "# Ka 0.2 0.2 0.2")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "Kd 1 1 1")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "Ks 0 0 0")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "# map_Ka " + "textures/" + string_replace(ds_map_find_value(textures, temp), "minecraft:", "") + ".png")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "# for G3D, to make textures look blocky:")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "map_Kd " + "textures/" + string_replace(ds_map_find_value(textures, temp), "minecraft:", "") + ".png")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "# illum 2")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "# d 1")
-				file_text_writeln(mtl)
-				file_text_write_string(mtl, "# Tr 0")
-				file_text_writeln(mtl)
-				file_text_writeln(mtl)
-				file_text_writeln(mtl)
-			#endregion
-							}
-						}
-			
-				ds_map_add(model_texture_ds, "#" + temp, tex_temp)
-			
-				temp = ds_map_find_next(textures, temp)
+					//Add it to the json, then get next one.
+					ds_map_add(ds_map_find_value(json_ds, "textures"), iTex, textures[? iTex])
+					var iTex = ds_map_find_next(textures)
+					}
 				}
-			} 
+				
+			//Destroy the parent's DS.
+			ds_map_destroy(parent)
+			} until !ds_map_exists(json_ds, "parent") 
+	
+		//Get the textures DS.
+		var textures = ds_map_find_value(json_ds, "textures")
 		
-		} until ds_map_exists(ds_map, "elements")
-	}
-	
-	var elements = ds_map_find_value(ds_map, "elements")
-	var i = 0
-	repeat ds_list_size(elements) {
-		var current_element = ds_list_find_value(elements, i)
-		var faces = ds_map_find_value(current_element, "faces")
-	
-	#region From / to coordinates
-		var from = ds_map_find_value(current_element, "from")
-		var to = ds_map_find_value(current_element, "to")
-	
-		var from_x = ds_list_find_value(from, 0)
-		var from_y = ds_list_find_value(from, 1)
-		var from_z = ds_list_find_value(from, 2)
-	
-		var to_x = ds_list_find_value(to, 0)
-		var to_y = ds_list_find_value(to, 1)
-		var to_z = ds_list_find_value(to, 2)
-	
-		//var order = order_least_greatest(from_x, to_x)
-		//from_x = order[0]
-		//to_x = order[1]
-	
-		//var order = order_least_greatest(from_y, to_y)
-		//from_y = order[0]
-		//to_y = order[1]
-	
-		//var order = order_least_greatest(from_z, to_z)
-		//from_z = order[0]
-		//to_z = order[1]
-	
-		//IDK if ordering is required so i commented it out
-	
-		//Divide by 16 (to correct blender scale)
-		from_x/=16
-		from_y/=16
-		from_z/=16
-		to_x/=16
-		to_y/=16
-		to_z/=16
-	
-		from_x+=x_lines_done
-		from_y+=y_lines_done
-		from_z+=z_lines_done
-		to_x+=x_lines_done
-		to_y+=y_lines_done
-		to_z+=z_lines_done
-	
-	#endregion
-	
+		
+		//Get texture shorthands (EG #top).
+		var texture_shorthands = ds_map_create() //Make DS
+		
+		//Get the first shorthand, then repeat: 
+		//( Add texture shorthand to DS, get next, make material )
+		var texture_temp = ds_map_find_first(texture_shorthands)
+		repeat ds_map_size(textures) {		
+			ds_map_add(texture_shorthands, texture_temp, textures[? texture_temp])
+			texture_temp = ds_map_find_next(texture_shorthands, texture_temp)
+			
+			//Material		
+			if string_pos("dungeons", textures[? texture_temp]) > 0 { 
+				var texture_path = string_replace_all(textures[? texture_temp], "dungeons", ma_resourcepacks) + ".png"
+				
+				mc2obj_mtl(mtl, mat_map, textures[? texture_temp], texture_path)
+				}		
+			if string_pos("minecraft", textures[? texture_temp]) > 0 { 
+				var texture_path = string_replace_all(textures[? texture_temp], "minecraft", ma_textures_directory) + ".png"
+				
+				mc2obj_mtl(mtl, mat_map, textures[? texture_temp], texture_path)
+				}
+			if string_pos("missing", textures[? texture_temp]) > 0 { 
+				mc2obj_mtl(mtl, mat_map, textures[? texture_temp], "missing.png")
+				}
+			}
+			
+			
+			
+		var elements = ds_map_find_value(json_ds, "elements")
+		
+		var iElement = 0
+		repeat ds_list_size(elements) {
+		
+		var element = elements[| iElement]
+			from_x = json_get(element)
+			from_y
+			from_z
+			
+		//At reading elements.
+		//ADD: FROM, TO
+		//UV
+		//REPLACE TEMP WITH ELEMENT
+		//BOOM
+		//THEN DO PARSE OBJ
+		//FOR THE STATE READIND
+		//COMMENTS I N ALL CAP S
+			
+		
+		var faces = element[? "faces"]
+
 		//Faces
 		var current_face = ds_map_find_first(faces)
 		repeat ds_map_size(faces) {
@@ -205,7 +136,7 @@ function obj_create_block(ds_map, buffer, v_count, vt_count, surrounding, mtl, m
 			
 				//Set the material for this face.
 		
-			if ds_map_find_value(surrounding, current_face) = 0 and ds_map_exists(temp, "cullface") and ds_list_find_index(ds_map_find_value(obj_gui.export_options_values, "selected"), 1) > -1 {
+			if ds_map_find_value(cullfaces, current_face) = 0 and ds_map_exists(temp, "cullface") and ds_list_find_index(ds_map_find_value(obj_gui.export_options_values, "selected"), 1) > -1 {
 					//debug_log("MC2OBJ", "Culled face " + current_face + " " + string(ds_map_find_value(surrounding, current_face)))
 				} else {
 			
@@ -218,8 +149,8 @@ function obj_create_block(ds_map, buffer, v_count, vt_count, surrounding, mtl, m
 				buffer_write(buffer, buffer_text, "usemtl " + ds_map_find_value(mat_map, mat))
 				buffer_write(buffer, buffer_text, chr($000D) + chr($000A))
 				
-				buffer_write(buffer, buffer_text, "g " + current_block_name)
-				buffer_write(text_file_buffer, buffer_text, chr($000D) + chr($000A))
+				//buffer_write(buffer, buffer_text, "g " + current_block_name)
+				//buffer_write(buffer, buffer_text, chr($000D) + chr($000A))
 			
 				//Create vertices
 				switch (current_face) {
@@ -418,14 +349,10 @@ function obj_create_block(ds_map, buffer, v_count, vt_count, surrounding, mtl, m
 			current_face = ds_map_find_next(faces, current_face)
 			}
 	
-		i++
+		iElement++
 		}
 
 	vertice_count = v_count
 	vertice_texture_count = vt_count
-	ds_map_destroy(model_texture_ds)
-
-	ds_list_delete(global.ds_map_list, ds_list_find_index(global.ds_map_list, ds_map))
-	ds_map_destroy(ds_map)
 	
 }

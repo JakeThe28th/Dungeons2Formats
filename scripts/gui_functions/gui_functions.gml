@@ -7,12 +7,14 @@ function gui_draw_button(x1, y1, x2, y2, color, hovercolor, text, px, py, menu) 
 	
 	
 	if point_in_area(x1, y1, x2, y2, px, py) and grayed_out_buttons = false {
-		if mouse_check_button_released(mb_left) state = true
 		if global.current_menu = menu or global.current_menu = false {
+		if mouse_check_button_released(mb_left) state = true
+		
 		//draw_rectangle_color(x1, y1, x2, y2, color, color, color, color, false) 
 		var merge = merge_color(hovercolor, color, .75)
 		draw_rectangle_color(x1, y1, x2, y2, hovercolor, merge, merge, hovercolor, false) 
-		}
+		
+		} else draw_rectangle_color(x1, y1, x2, y2, color, color, color, merge_color(color, c_black, .10), false) 
 		} else {
 			draw_rectangle_color(x1, y1, x2, y2, color, color, color, color, false) 
 			}
