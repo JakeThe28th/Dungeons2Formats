@@ -1,7 +1,7 @@
 function obj_create_block(bx, by, bz, json, buffer, v_count, vt_count, cullfaces, mtl, mat_map) {
 		var json_ds = json_load(json)
 	
-		//Parent Handling
+	#region Parent Handling
 		do {
 			//Load the parent's DS.
 			var parent = json_load(ma_models_directory + string_replace(json_ds[? "parent"], "minecraft:",""))
@@ -23,24 +23,28 @@ function obj_create_block(bx, by, bz, json, buffer, v_count, vt_count, cullfaces
 					
 					//Add it to the json, then get next one.
 					ds_map_add(ds_map_find_value(json_ds, "textures"), iTex, textures[? iTex])
-					var iTex = ds_map_find_next(textures)
+					var iTex = ds_map_find_next(textures, iTex)
 					}
 				}
 				
 			//Destroy the parent's DS.
 			ds_map_destroy(parent)
-			} until !ds_map_exists(json_ds, "parent") 
-	
-		//Get the textures DS.
-		var textures = ds_map_find_value(json_ds, "textures")
+			} until !ds_map_exists(json_ds, "parent") 	
+		#endregion	
+		
+	#region Get texture shorthands
+		
+		var textures = ds_map_find_value(json_ds, "textures") //Get the textures DS.
 		
 		
 		//Get texture shorthands (EG #top).
 		var texture_shorthands = ds_map_create() //Make DS
 		
+		
 		//Get the first shorthand, then repeat: 
 		//( Add texture shorthand to DS, get next, make material )
 		var texture_temp = ds_map_find_first(texture_shorthands)
+		
 		repeat ds_map_size(textures) {		
 			ds_map_add(texture_shorthands, texture_temp, textures[? texture_temp])
 			texture_temp = ds_map_find_next(texture_shorthands, texture_temp)
@@ -60,69 +64,97 @@ function obj_create_block(bx, by, bz, json, buffer, v_count, vt_count, cullfaces
 				mc2obj_mtl(mtl, mat_map, textures[? texture_temp], "missing.png")
 				}
 			}
-			
-			
-			
+		
+		#endregion
+		
+		
+	#region Read elements.
+		//Get the elements list.
 		var elements = ds_map_find_value(json_ds, "elements")
-		
 		var iElement = 0
+		
+		
 		repeat ds_list_size(elements) {
-		
-		var element = elements[| iElement]
-			from_x = json_get(element)
-			from_y
-			from_z
-			
-		//At reading elements.
-		//ADD: FROM, TO
-		//UV
-		//REPLACE TEMP WITH ELEMENT
-		//BOOM
-		//THEN DO PARSE OBJ
-		//FOR THE STATE READIND
-		//COMMENTS I N ALL CAP S
-			
-		
+		//Get the current element, then get it's faces.
+		var element = elements[| iElement]	
 		var faces = element[? "faces"]
 
-		//Faces
-		var current_face = ds_map_find_first(faces)
+
+		#region From / to coordinates
+		var from = element[? "from"]
+		var to = element[? "to"]
+	
+		var from_x = ds_list_find_value(from, 0)
+		var from_y = ds_list_find_value(from, 1)
+		var from_z = ds_list_find_value(from, 2)
+	
+		var to_x = ds_list_find_value(to, 0)
+		var to_y = ds_list_find_value(to, 1)
+		var to_z = ds_list_find_value(to, 2)
+	
+	
+		//Divide by 16 (to correct blender scale)
+		from_x/=16
+		from_y/=16
+		from_z/=16
+		to_x/=16
+		to_y/=16
+		to_z/=16
+	
+		//Offset it by the current block's position.
+		from_x+=bx
+		from_y+=by
+		from_z+=bz
+		to_x+=bx
+		to_y+=by
+		to_z+=bz
+	
+	#endregion
+
+
+		//Read the faces.
+		var face = ds_map_find_first(faces)
 		repeat ds_map_size(faces) {
-		
-			var temp = ds_map_find_value(faces, current_face) //Get the current face's DS
-			var uv = ds_map_find_value(temp, "uv")
-			#region UV
+			//Get the DS map of the current face.
+			var temp = ds_map_find_value(faces, face)
 			
+			var uv = temp[? "uv"]
+			#region UV
 				if ds_map_exists(temp, "uv") {
+				//Get UV coordinates from the model.
 				var uv_x1 = ds_list_find_value(uv, 0)
 				var uv_y1 = ds_list_find_value(uv, 1)
 				var uv_x2 = ds_list_find_value(uv, 2)
 				var uv_y2 = ds_list_find_value(uv, 3)
 			
-				if current_face = "north" or current_face = "east" or current_face = "south"or current_face = "west" {
+			
+				if face = "north" or face = "east" or face = "south" or face = "west" {
 					uv_y2-= uv_y1
 					uv_y1-= uv_y1
 					}
 			
+				//Divide UV coordinates by the texture size (Usually 16)
 				uv_x1/=16
 				uv_y1/=16
 				uv_x2/=16
 				uv_y2/=16
-			
+				
+				//Order the UV coordinates by least to greatest.
 				var order = order_least_greatest(uv_x1, uv_x2)
 				uv_x1 = order[0]
 				uv_x2 = order[1]
-			
+				
 				var order = order_least_greatest(uv_y1, uv_y2)
 				uv_y1 = order[0]
 				uv_y2 = order[1]
 					} else {
+						//In the case that there arent any UV coordinates, just use hardcoded ones.
 						var uv_x1 = 0
 						var uv_y1 = 0
 						var uv_x2 = 16
 						var uv_y2 = 16
 					
-						if current_face = "north" or current_face = "east" or current_face = "south"or current_face = "west" {
+						if face = "north" or face = "east" or face = "south"or face = "west" {
 							uv_y2-= uv_y1
 							uv_y1-= uv_y1
 						}
@@ -133,30 +165,31 @@ function obj_create_block(bx, by, bz, json, buffer, v_count, vt_count, cullfaces
 						uv_y2/=16
 						}
 			#endregion
-			
-				//Set the material for this face.
 		
-			if ds_map_find_value(cullfaces, current_face) = 0 and ds_map_exists(temp, "cullface") and ds_list_find_index(ds_map_find_value(obj_gui.export_options_values, "selected"), 1) > -1 {
-					//debug_log("MC2OBJ", "Culled face " + current_face + " " + string(ds_map_find_value(surrounding, current_face)))
+			
+			//If (Face culling mumbo jumbo)
+			#region Build a face
+			if ds_map_find_value(cullfaces, face) = 0 and ds_map_exists(temp, "cullface") and ds_list_find_index(ds_map_find_value(obj_gui.export_options_values, "selected"), 1) > -1 {
+					//debug_log("MC2OBJ", "Culled face " + face + " " + string(ds_map_find_value(surrounding, face)))
 				} else {
 			
-			//if global.gui_values != undefined {
-			
 				//Use material
-				var texture = ds_map_find_value(temp, "texture")
-				var mat = ds_map_find_value(model_texture_ds, texture)
+				var mat = ds_map_find_value(texture_shorthands, temp[? "texture"])
 			
 				buffer_write(buffer, buffer_text, "usemtl " + ds_map_find_value(mat_map, mat))
 				buffer_write(buffer, buffer_text, chr($000D) + chr($000A))
 				
-				//buffer_write(buffer, buffer_text, "g " + current_block_name)
+				//If seperate blocks
+				//if ds_list_find_index(ds_map_find_value(obj_gui.export_options_values, "selected"), 7) > -1 {
+				//buffer_write(buffer, buffer_text, "o " + current_block_name)
 				//buffer_write(buffer, buffer_text, chr($000D) + chr($000A))
-			
+					//}
+				
 				//Create vertices
-				switch (current_face) {
+				switch (face) {
 					case "south": 	
 					#region North vertices
-						buffer_write(buffer, buffer_text, "#South face")
+						//buffer_write(buffer, buffer_text, "#South face")
 						buffer_write(buffer, buffer_text, chr($000D) + chr($000A))
 					
 						buffer_write(buffer, buffer_text,"v " + string(from_x) + " " + string(to_y) + " " + string(to_z))
@@ -180,7 +213,7 @@ function obj_create_block(bx, by, bz, json, buffer, v_count, vt_count, cullfaces
 						break;
 					case "north": 
 					#region South vertices
-						buffer_write(buffer, buffer_text, "#North face")
+						//buffer_write(buffer, buffer_text, "#North face")
 						buffer_write(buffer, buffer_text, chr($000D) + chr($000A))
 					
 						buffer_write(buffer, buffer_text,"v " + string(from_x) + " " + string(to_y) + " " + string(from_z))
@@ -205,7 +238,7 @@ function obj_create_block(bx, by, bz, json, buffer, v_count, vt_count, cullfaces
 						break;
 					case "west": 
 					#region West vertices
-						buffer_write(buffer, buffer_text, "#West face")
+						//buffer_write(buffer, buffer_text, "#West face")
 						buffer_write(buffer, buffer_text, chr($000D) + chr($000A))
 					
 						buffer_write(buffer, buffer_text,"v " + string(from_x) + " " + string(to_y) + " " + string(to_z))
@@ -230,7 +263,7 @@ function obj_create_block(bx, by, bz, json, buffer, v_count, vt_count, cullfaces
 						break;
 					case "east": 
 					#region East vertices
-						buffer_write(buffer, buffer_text, "#East face")
+						//buffer_write(buffer, buffer_text, "#East face")
 						buffer_write(buffer, buffer_text, chr($000D) + chr($000A))
 					
 						buffer_write(buffer, buffer_text,"v " + string(to_x) + " " + string(to_y) + " " + string(to_z))
@@ -255,7 +288,7 @@ function obj_create_block(bx, by, bz, json, buffer, v_count, vt_count, cullfaces
 						break;
 					case "up": 		
 					#region Up vertices
-						buffer_write(buffer, buffer_text, "#Up face")
+						//buffer_write(buffer, buffer_text, "#Up face")
 						buffer_write(buffer, buffer_text, chr($000D) + chr($000A))
 					
 						buffer_write(buffer, buffer_text,"v " + string(from_x) + " " + string(to_y) + " " + string(to_z))
@@ -280,7 +313,7 @@ function obj_create_block(bx, by, bz, json, buffer, v_count, vt_count, cullfaces
 						break;
 					case "down": 		
 					#region Down vertices
-						buffer_write(buffer, buffer_text, "#Down face")
+						//buffer_write(buffer, buffer_text, "#Down face")
 						buffer_write(buffer, buffer_text, chr($000D) + chr($000A))
 					
 						buffer_write(buffer, buffer_text,"v " + string(from_x) + " " + string(from_y) + " " + string(from_z))
@@ -307,7 +340,7 @@ function obj_create_block(bx, by, bz, json, buffer, v_count, vt_count, cullfaces
 					}
 		
 					#region Add UV coordinates.
-						buffer_write(buffer, buffer_text, "#Texture coordinates")
+						//buffer_write(buffer, buffer_text, "#Texture coordinates")
 						buffer_write(buffer, buffer_text, chr($000D) + chr($000A))
 					
 						buffer_write(buffer, buffer_text,"vt " + string_format(uv_x1, 1, 3) + " " + string_format(uv_y2, 1, 3))
@@ -344,15 +377,21 @@ function obj_create_block(bx, by, bz, json, buffer, v_count, vt_count, cullfaces
 					#endregion
 		
 			}
+			
+			#endregion
 		
-		
-			current_face = ds_map_find_next(faces, current_face)
+			face = ds_map_find_next(faces, face)
 			}
 	
 		iElement++
 		}
+	#endregion
 
 	vertice_count = v_count
 	vertice_texture_count = vt_count
 	
+	
+	// Need to rework the parse_obj to read dungeons, pass to blockstate function.
+	// Then, update for bedrock edition handling.
+	// Maybe use the namespace "bedrock:" ?
 }
