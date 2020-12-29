@@ -15,5 +15,9 @@ dir = ma_lovika + "levels\\" + global.current_level + ".json"
 	
 	global.current_resource_pack = json_get(json, "resource-packs", 0)
 	
+	global.pack_blocks = json_load(ma_resourcepacks + global.current_resource_pack + "\\blocks.json")
+	global.pack_resources = json_load(ma_resourcepacks + global.current_resource_pack + "\\resources.json")
+	global.pack_terrain_texture = json_load(ma_resourcepacks + global.current_resource_pack + "\\images\\terrain_texture.json")
+	
 				
-				
+	debug_log("INFO", "Finished loading level.")	

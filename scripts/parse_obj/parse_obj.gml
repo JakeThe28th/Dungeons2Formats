@@ -17,10 +17,11 @@ function parse_obj() {
 		var block_byte = buffer_read(blockdata, buffer_u8)
 		var block_state_byte = buffer_read(blockstatedata, buffer_u8)
 		
-		
-		
+		#region Culling map.
 		if block_byte != 0 {
 			//If the current block's ID isn't 0 (Air)
+			if ds_list_find_index(ds_map_find_value(obj_gui.export_options_values, "selected"), 0) >= 0 {
+			//If full block culling is off force it to make the block
 			#region Modify the ds map of the surrounding 6 blocks (To know whether or not to cull a face)
 			
 			var sides = 6 //Visible sides of block
@@ -64,15 +65,14 @@ function parse_obj() {
 			//debug_log("MC2OBJ",string(sides))
 				
 			#endregion
-			}
-		
-		//If full block culling is off force it to make the block
-		if ds_list_find_index(ds_map_find_value(obj_gui.export_options_values, "selected"), 0) < 0 sides = 1
+			} else sides = 1
+		}
+		#endregion
 		
 		if block_byte != 0 and sides > 0 {
 	
 			#region Get blockstate ID
-		if block_floor < ceil(block/2) {
+			if block_floor < ceil(block/2) {
 			//This is the second state.
 		
 			var blockstate = string_copy(string(int_to_binary(block_state_byte, 8)), 3, 4)
@@ -86,176 +86,128 @@ function parse_obj() {
 			
 		#endregion
 		
-		
 			//Get the block name, and state from its ID.
-			var cblock = ds_map_find_value(global.filter, string(block_byte))
+			var block_name = ds_map_find_value(global.filter, string(block_byte))
+			var block_entry = global.pack_blocks[? block_name]
 			
-			//Missing block error handling.
-			if cblock = undefined { 
-				var cstate = undefined
-				debug_log("MC2OBJ", "Missing block. X: " + string(x_lines_done) + " Y: " + string(y_lines_done) + " Z: " + string(z_lines_done) + " ID: " + string(block_byte) + " State:" + string(blockstate))
-				} else var cstate = ds_map_find_value(cblock, string(blockstate))
-		
-			if cstate = undefined {
-				debug_log("MC2OBJ", "Missing blockstate. X: " + string(x_lines_done) + " Y: " + string(y_lines_done) + " Z: " + string(z_lines_done) + " ID: " + string(block_byte) + " State:" + string(blockstate))
+			var blockshape = block_entry[? "blockshape"]
+			if blockshape = undefined blockshape = "basic"
+			
+			var all_sides, up, down, side, north, east, west, south;
+			var all_sides = false
+			var textures = block_entry[? "textures"]
+			if !is_string(textures) {
+						
+				if textures[? "up"] != undefined up = textures[? "up"]
+				if textures[? "down"] != undefined down = textures[? "down"]
 				
-				//Increment the current block. If the last block is done, return done. 
-				//Otherwise, return -1, since there wasn't a block here.
-				if mc2obj_increment_block() = "done" return "done"
-				return -1
-				}
-				
-				
-			//NOTE TO SELF: IN FUTURE, REWRITE FILTER TO USE MULTIDIMENSIONAL ARRAYS INSTEAD OF DS MAPS.
-		
-		
-		
-			current_block = cstate[? "name_raw"] //Name and [Blockstate]
-			current_block_name = cstate[? "Name"] //Name
+				//Column
+				if textures[? "side"] != undefined {
+					side = textures[? "side"]
 					
-			if string_pos("dungeonmaster", current_block_name) !=0 {
-				#region full blocks
-					var template_model = ma_templates_directory + "block\\j_template_full_block.json"
-					var template_model_out = ma_templates_directory + "output\\temp.json"
-					
-						var texture_all = "minecraft:debug"
-						var up = texture_all
-						var down = texture_all
-						var north = texture_all
-						var east = texture_all
-						var west = texture_all
-						var south = texture_all
-					
-						textfile_copy_replace(template_model, "%top%",  up, template_model_out)
-						textfile_copy_replace(template_model_out, "%bottom%", down, template_model_out)
-					
-						textfile_copy_replace(template_model_out, "%north%", north, template_model_out)
-						textfile_copy_replace(template_model_out, "%east%", east, template_model_out)
-						textfile_copy_replace(template_model_out, "%west%", west, template_model_out)
-						textfile_copy_replace(template_model_out, "%south%", south, template_model_out)
-					#endregion
-					
-						if mc2obj_increment_block() = "done" return "done"
-					mc2obj_model(x_lines_done,y_lines_done,z_lines_done,template_model_out,text_file_buffer,vertice_count, vertice_texture_count,bds,mtloutput,mat_map)
-					return -1
-				} else {
-		
-			#region If the block isn't from dungeons:
-			#region Get the block's json file
-			
-			//Get the blockstates json and decode it.
-			var blockstates_js = ma_blockstates_directory + string_replace(current_block_name, "minecraft:", "")
-			var blockstates_js = util_file_to_string(blockstates_js + ".json")
-			var blockstates_js = json_decode(blockstates_js)
-			
-			
-			//If there arent any variants, this model is probably multipart
-			if ds_map_find_value(blockstates_js, "variants") = undefined {
-			
-				var block_json = util_ds_path(blockstates_js, ";", "multipart;0;apply;model", "both")
-				var model = "mutipart"
-				} else {
-				
-			//If there are variants..
-			
-			//Get the block's state data
-			var block_state_values = split_string(current_block, "[")
-			var block_state_values = string_replace(block_state_values[array_length(block_state_values)-1], "]", "")
-			
-			//If there arent any states (all states have '=' in them), set the state data to nothing. (Models without states use "")
-			if string_pos("=", block_state_values) = 0 block_state_values = ""
-			
-			
-			var block_json = util_ds_path(blockstates_js,";","variants;" + string(block_state_values) + ";model", "both")
-			if block_json = undefined block_json = util_ds_path(blockstates_js,";","variants;" + string(block_state_values) + ";0;model", "both")
-			
-			if block_json = undefined block_json = util_ds_path(blockstates_js,";","variants;?;model", "both")
-			
-			if block_json = undefined show_error("Missing block states for current block. Using the first state in blockstates list, '" + current_block_name + "'", false)
-			
-				}
-				
-			#endregion
-			
-		
-			var block_json = ma_models_directory + string_replace(block_json, "minecraft:", "") + ".json"
-			ds_map_destroy(blockstates_js)
-		
-			
-			#endregion
-			
-			}
-
-			model = ""
-			if model = "multipart" { 
-				if string_pos("fence", current_block_name) >0 {
-					//chekc for surrounding fences
-				
+					north = false
+					east = false
+					west = false
+					south = false
 					}
-			
-				//Repeat (multipart list size)
-				//get the model for "apply".
-				//if "when" doesn't exist, build that model.
-				//if "when" does exist, get it's value
-				//Check for "when's value's name + "=" + "when"'s value in the block states.
-				//if it exists, build that model.
-			
+					
+				//Directional
+				if textures[? "north"] != undefined {
+					north = textures[? "north"]
+					east = textures[? "east"]
+					west = textures[? "west"]
+					south = textures[? "south"]
+					
+					side = false
+					}
+				
 			
 				} else {
-			blocks_created++
+					var all_sides = textures
+			
+					var up = all_sides
+					var down = all_sides
+					var side = all_sides
+			
+					var north = all_sides
+					var east = all_sides
+					var south = all_sides
+					var west = all_sides
+					}
+					
+			
+			if all_sides = false {
+				//HANDLE THE TEXTURES LIST AND OBJECT
+				var i = 0
+				var temp_tex_face = up
+				repeat 7 {
+					switch (i) {
+						case 0: temp_tex_face = up; break;
+						case 1: temp_tex_face = down; break;
+						case 2: temp_tex_face = side; break;
+						case 3: temp_tex_face = north; break;
+						case 4: temp_tex_face = east; break;
+						case 5: temp_tex_face = west; break;
+						case 6: temp_tex_face = south; break;
+						} 
+						
+						if temp_tex_face !=false {
+				
+						var textures_states = json_get(global.pack_terrain_texture, "texture_data", temp_tex_face)
+							if is_string(textures_states) temp_tex_face = textures_states else {
+								temp_tex_face = json_get(textures_states, blockstate)
+								}
+						
+						temp_tex_face = json_get(global.pack_resources, "resources", "textures", temp_tex_face)
+						
+						switch (i) {
+						case 0: up = temp_tex_face; break;
+						case 1: down = temp_tex_face; break;
+						case 2: side = temp_tex_face; break;
+						case 3: north = temp_tex_face; break;
+						case 4: east = temp_tex_face; break;
+						case 5: west = temp_tex_face; break;
+						case 6: south = temp_tex_face; break;
+						} 
+						}
+					i++
+					}
+				}
+			
+			var block_json = textfile_copy_replace(ma_templates_directory + "blockshapes\\" + blockshape + ".json", "%up%", up, ma_templates_directory + "generated\\" + block_name + "_" + string(blockstate))
+			var block_json = textfile_copy_replace(ma_templates_directory + "blockshapes\\" + blockshape + ".json", "%down%", down, ma_templates_directory + "generated\\" + block_name + "_" + string(blockstate))
+			
+			var block_json = textfile_copy_replace(ma_templates_directory + "blockshapes\\" + blockshape + ".json", "%west%", west, ma_templates_directory + "generated\\" + block_name + "_" + string(blockstate))
+			var block_json = textfile_copy_replace(ma_templates_directory + "blockshapes\\" + blockshape + ".json", "%east%", east, ma_templates_directory + "generated\\" + block_name + "_" + string(blockstate))
+			var block_json = textfile_copy_replace(ma_templates_directory + "blockshapes\\" + blockshape + ".json", "%north%", north, ma_templates_directory + "generated\\" + block_name + "_" + string(blockstate))
+			var block_json = textfile_copy_replace(ma_templates_directory + "blockshapes\\" + blockshape + ".json", "%south%", south, ma_templates_directory + "generated\\" + block_name + "_" + string(blockstate))
+			
+			
 			mc2obj_model(x_lines_done,y_lines_done,z_lines_done,block_json,text_file_buffer,vertice_count, vertice_texture_count,bds,mtloutput,mat_map)
 			
+			
+			var leaf_sides = -1
 			if string_pos("leaves", current_block_name) > 0 and leaf_sides > 0 and ds_list_find_index(ds_map_find_value(obj_gui.export_options_values, "selected"), 2) > -1 {
 				var leaf_id = string_replace(current_block_name, "dungeonmaster:LEVELNAME/", "") + "_outer"
 				if !ds_map_exists(mat_map, leaf_id) {
 				ds_map_add(mat_map, leaf_id, leaf_id)
-				#region mtl nonsense
-				file_text_write_string(mtloutput, "newmtl " + leaf_id)
-				file_text_writeln(mtloutput)
-				file_text_write_string(mtloutput, "# Ns 0")
-				file_text_writeln(mtloutput)
-				file_text_write_string(mtloutput, "# Ka 0.2 0.2 0.2")
-				file_text_writeln(mtloutput)
-				file_text_write_string(mtloutput, "Kd 1 1 1")
-				file_text_writeln(mtloutput)
-				file_text_write_string(mtloutput, "Ks 0 0 0")
-				file_text_writeln(mtloutput)
-				file_text_write_string(mtloutput, "# map_Ka " + "resourcepacks\\" + global.current_resource_pack + "\\images\\blocks\\" + leaf_id + ".png")
-				file_text_writeln(mtloutput)
-				file_text_write_string(mtloutput, "# for G3D, to make textures look blocky:")
-				file_text_writeln(mtloutput)
-				file_text_write_string(mtloutput, "interpolateMode NEAREST_MAGNIFICATION_TRILINEAR_MIPMAP_MINIFICATION")
-				file_text_writeln(mtloutput)
-				file_text_write_string(mtloutput, "map_Kd " + "resourcepacks\\" + global.current_resource_pack + "\\images\\blocks\\" + leaf_id + ".png")
-				file_text_writeln(mtloutput)
-				file_text_write_string(mtloutput, "# illum 2")
-				file_text_writeln(mtloutput)
-				file_text_write_string(mtloutput, "# d 1")
-				file_text_writeln(mtloutput)
-				file_text_write_string(mtloutput, "# Tr 0")
-				file_text_writeln(mtloutput)
-				file_text_writeln(mtloutput)
-				file_text_writeln(mtloutput)
-				#endregion
+				mc2obj_mtl(mtloutput, mat_map, leaf_id, global.current_resource_pack + "\\images\\blocks\\" + leaf_id + ".png")
 					}
 					
 				buffer_write(text_file_buffer, buffer_text, "usemtl " + ds_map_find_value(mat_map, leaf_id))
 				buffer_write(text_file_buffer, buffer_text, chr($000D) + chr($000A))
 				
-				buffer_write(text_file_buffer, buffer_text, "g leaves_outer")
+				buffer_write(text_file_buffer, buffer_text, "o leaves_outer")
 				buffer_write(text_file_buffer, buffer_text, chr($000D) + chr($000A))
 				
 				mc2obj_build_obj_at("leaves.obj",text_file_buffer,x_lines_done, y_lines_done, z_lines_done)
 				}
-			}
-			
-			
-		
+
 		} else {
 			blocks_skipped++
 			if block_byte = 0 air_blocks_skipped++
-			current_block = "minecraft:air"
-			current_block_name = "minecraft:air"
+			current_block = "air"
+			current_block_name = "air"
 			}
 	
 	//if ds_map_find_first(bds) != undefined {
