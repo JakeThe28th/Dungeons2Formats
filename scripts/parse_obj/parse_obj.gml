@@ -114,211 +114,17 @@ function parse_obj() {
 			current_block_name = cstate[? "Name"] //Name
 					
 			if string_pos("dungeonmaster", current_block_name) !=0 {
-				dungeons_id = "dungeons"
-			
-				
-				//Check if the filter contains a model for this block. If not,
-				if !file_exists(ma_filters +  global.current_resource_pack + "\\models" +string_replace_all(current_block_name, "dungeonmaster:LEVELNAME/", "dungeons_") + ".json") {
+				#region full blocks
+					var template_model = ma_templates_directory + "block\\j_template_full_block.json"
+					var template_model_out = ma_templates_directory + "output\\temp.json"
 					
-					//Check if we've already made a json for this block. If not, make one.
-					var template_model_out = ma_json_directory + global.current_resource_pack + + "\\" + string_replace_all(current_block_name, "dungeonmaster:LEVELNAME/", "dungeons_") + ".json"
-					} else { template_model_out = ma_filters +  global.current_resource_pack + "\\models" +string_replace_all(current_block_name, "dungeonmaster:LEVELNAME/", "dungeons_") + ".json" }
-				
-				
-				if !file_exists(template_model_out) {
-				
-				var block_state_values = split_string(current_block, "[")
-				var block_state_values = string_replace(block_state_values[array_length(block_state_values)-1], "]", "")
-				if string_pos("=", block_state_values) < 1 block_state_values = ""
-			
-				var block_type = "full"
-					
-				debug_log("MC2OBJ", "Creating JSON for " + global.current_resource_pack + ": " + current_block_name + " FILE:" + template_model_out)
-				
-				#region Get textures.
-				var block_texture_json = ds_map_find_value(global.block_textures, string_replace(current_block_name, "dungeonmaster:LEVELNAME/", ""))
-			
-				if block_texture_json != undefined {	
-					
-					if ds_map_find_value(block_texture_json, "blockshape") != undefined {
-						if ds_map_find_value(block_texture_json, "blockshape") = "cross_texture" block_type = "cross"
-						}
-					
-					var block_texture_json = ds_map_find_value(block_texture_json, "textures")
-					
-					
-				
-				if is_string(block_texture_json) {
-				
-					var up = block_texture_json
-					var down = block_texture_json
-					var side = block_texture_json
-					
-					var north = block_texture_json
-					var south = block_texture_json
-					var east = block_texture_json
-					var west = block_texture_json
-					
-					var texture_all = block_texture_json
-					
-					} else {
-						//Placeholder textures
-						var up = "stone"
-						var down = "stone"
-						var side = "stone"
-					
-						var north = "stone"
-						var south = "stone"
-						var east = "stone"
-						var west = "stone"
-					
-					
-						//Get actual textures	
-						if ds_map_exists(block_texture_json, "up") up = ds_map_find_value(block_texture_json, "up")
-						if ds_map_exists(block_texture_json, "down") down = ds_map_find_value(block_texture_json, "down")
-						if ds_map_exists(block_texture_json, "side") side = ds_map_find_value(block_texture_json, "side")
-						//Incase  these values arent set, set them to side.
-						var north = side
-						var south = side
-						var east = side
-						var west = side
-					
-						if ds_map_exists(block_texture_json, "north") north = ds_map_find_value(block_texture_json, "north")
-						if ds_map_exists(block_texture_json, "south") south = ds_map_find_value(block_texture_json, "south")
-						if ds_map_exists(block_texture_json, "east") east = ds_map_find_value(block_texture_json, "east")
-						if ds_map_exists(block_texture_json, "west") west = ds_map_find_value(block_texture_json, "west")
-					
-						}				
-					} else {
-						var texture_all = string_replace(current_block_name, "dungeonmaster:LEVELNAME/", "")
-					
-						//Just incase the block has a suffix that isn't in a texture
-						if !file_exists(ma_resourcepacks + global.current_resource_pack + "\\images\\blocks\\" + texture_all + ".png") {
-							
-							if !file_exists(ma_resourcepacks + global.current_resource_pack + "\\images\\blocks\\" + texture_all + "_top.png") {
-							
-							var texture_all_temp = string_replace(texture_all, "_slab", "")
-							var texture_all_temp = string_replace(texture_all_temp, "_path", "")
-							
-							
-							texture_all = texture_all_temp
-							}
-							
-							//If it still doesn't exist v
-							//if !file_exists(global.dataDirectory + "\\resourcepacks\\" + global.current_resource_pack + "\\images\\blocks\\" + texture_all_temp + ".png") then texture_all_temp = texture_all + "_top"
-							
-							
-							}
-						
-					
+						var texture_all = "minecraft:debug"
 						var up = texture_all
 						var down = texture_all
-						var side = texture_all
-					
 						var north = texture_all
-						var south = texture_all
 						var east = texture_all
 						var west = texture_all
-						
-						
-						if file_exists(ma_resourcepacks + global.current_resource_pack + "\\images\\blocks\\" + up + "_top.png") up = up + "_top"
-					
-						
-					
-						}
-				#endregion
-			
-			
-				if string_pos("path", current_block_name) >0 {
-					#region Path type blocks
-					
-						var block_type = "path"
-						var template_model = ma_models_directory + "block\\j_template_path.json"
-						
-						if !file_exists(ma_resourcepacks + global.current_resource_pack + "\\images\\blocks\\" + up + ".png") up = up + "_top"
-						if !file_exists(ma_resourcepacks + global.current_resource_pack + "\\images\\blocks\\" + side + ".png") side = side + "_side"
-						if !file_exists(ma_resourcepacks + global.current_resource_pack + "\\images\\blocks\\" + down + ".png") down = down + "_side"
-					
-						textfile_copy_replace(template_model, "%top%",  up, template_model_out)
-						textfile_copy_replace(template_model_out, "%side%", side, template_model_out)
-						textfile_copy_replace(template_model_out, "%bottom%", down, template_model_out)
-					
-					
-					#endregion
-					}
-					
-				if string_pos("flower", current_block_name) > 0 or block_type = "cross" {
-					#region Cross type blocks
-					
-						var block_type = "flower"
-						var template_model = ma_models_directory + "\\block\\j_template_cross.json"
-						
-					
-						textfile_copy_replace(template_model, "%texture_all%",  texture_all, template_model_out)
-					
-					
-					#endregion
-					}
-				
-				if string_pos("slab", current_block_name) >0 or string_pos("top", current_block) >0 or string_pos("bottom", current_block) >0 or string_pos("double", current_block) >0 {
-					#region Slabs
-					
-						var temp = 0
-					
-						var block_type = "slab"
-					#region bottom slabs
-						if string_pos("bottom", current_block) > 0 {
-							var temp = 1
-							var template_model = ma_models_directory + "block\\j_template_slab.json"
-							
-					
-							textfile_copy_replace(template_model, "%top%",  up, template_model_out)
-							textfile_copy_replace(template_model_out, "%side%", side, template_model_out)
-							textfile_copy_replace(template_model_out, "%bottom%", down, template_model_out)
-							}
-						#endregion
-						
-					#region top slabs	
-						if string_pos("top", current_block) > 0 {
-							var temp = 1
-							var template_model = ma_models_directory + "block\\j_template_slab_top.json"
-							
-					
-							textfile_copy_replace(template_model, "%top%",  up, template_model_out)
-							textfile_copy_replace(template_model_out, "%side%", side, template_model_out)
-							textfile_copy_replace(template_model_out, "%bottom%", down, template_model_out)
-							}
-						#endregion
-					
-					#region double slabs
-						if string_pos("double", current_block) > 0 {
-							var temp = 1
-							var template_model = ma_models_directory + "\\block\\j_template_full_slab.json"
-							
-					
-							textfile_copy_replace(template_model, "%top%",  up, template_model_out)
-							textfile_copy_replace(template_model_out, "%side%", side, template_model_out)
-							textfile_copy_replace(template_model_out, "%bottom%", down, template_model_out)
-							}
-						#endregion		
-						
-						if temp = 0 {
-							var temp = 1
-							var template_model = ma_models_directory + "\\block\\j_template_slab.json"
-					
-							textfile_copy_replace(template_model, "%top%",  up, template_model_out)
-							textfile_copy_replace(template_model_out, "%side%", side, template_model_out)
-							textfile_copy_replace(template_model_out, "%bottom%", down, template_model_out)
-							}
-				
-						#endregion
-					}
-				
-				if block_type = "full" {
-				#region full blocks
-				
-					var template_model = ma_models_directory + "\\block\\j_template_full_block.json"
-						
+						var south = texture_all
 					
 						textfile_copy_replace(template_model, "%top%",  up, template_model_out)
 						textfile_copy_replace(template_model_out, "%bottom%", down, template_model_out)
@@ -328,17 +134,10 @@ function parse_obj() {
 						textfile_copy_replace(template_model_out, "%west%", west, template_model_out)
 						textfile_copy_replace(template_model_out, "%south%", south, template_model_out)
 					#endregion
-					}
 					
-				
-				//data\resourcepacks\squidcoast\blocks.json has up, down, side etc textures.
-				//use it 
-				
-				}
-			
-				var ds = json_decode(util_file_to_string(template_model_out))
-				//ds_list_add(global.ds_map_list, ds)
-			
+						if mc2obj_increment_block() = "done" return "done"
+					mc2obj_model(x_lines_done,y_lines_done,z_lines_done,template_model_out,text_file_buffer,vertice_count, vertice_texture_count,bds,mtloutput,mat_map)
+					return -1
 				} else {
 		
 			#region If the block isn't from dungeons:
@@ -379,12 +178,9 @@ function parse_obj() {
 			#endregion
 			
 		
-			var block_json = util_file_to_string(ma_models_directory + string_replace(block_json, "minecraft:", "") + ".json")
+			var block_json = ma_models_directory + string_replace(block_json, "minecraft:", "") + ".json"
 			ds_map_destroy(blockstates_js)
 		
-			//The DS map of the minecraft model.
-			var ds = json_decode(block_json)
-			ds_list_add(global.ds_map_list, ds)
 			
 			#endregion
 			
@@ -407,7 +203,7 @@ function parse_obj() {
 			
 				} else {
 			blocks_created++
-			obj_create_block(ds, text_file_buffer, vertice_count, vertice_texture_count, bds, mtloutput, mat_map, dungeons_id)
+			mc2obj_model(x_lines_done,y_lines_done,z_lines_done,block_json,text_file_buffer,vertice_count, vertice_texture_count,bds,mtloutput,mat_map)
 			
 			if string_pos("leaves", current_block_name) > 0 and leaf_sides > 0 and ds_list_find_index(ds_map_find_value(obj_gui.export_options_values, "selected"), 2) > -1 {
 				var leaf_id = string_replace(current_block_name, "dungeonmaster:LEVELNAME/", "") + "_outer"
@@ -453,7 +249,6 @@ function parse_obj() {
 				}
 			}
 			
-			ds_map_destroy(ds)
 			
 		
 		} else {

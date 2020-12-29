@@ -19,6 +19,8 @@ function macros() {
 #macro ma_json_directory ma_directory + "generated\\"
 #macro ma_filters ma_directory + "filters\\"
 
+#macro ma_templates_directory ma_directory + "templates\\"
+
 
 //Handle nonexistent files
 if !directory_exists(ma_blockstates_directory) directory_create(ma_blockstates_directory)
@@ -30,6 +32,8 @@ if !directory_exists(ma_lovika) directory_create(ma_lovika)
 if !directory_exists(ma_resourcepacks) directory_create(ma_resourcepacks)
 
 if !directory_exists(ma_json_directory) directory_create(ma_json_directory)
+
+if !directory_exists(ma_templates_directory) directory_create(ma_templates_directory)
 
 if !directory_exists(ma_filters) {
 	directory_create(ma_filters);
