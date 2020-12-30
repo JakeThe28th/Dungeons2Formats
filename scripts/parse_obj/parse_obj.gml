@@ -72,17 +72,25 @@ function parse_obj() {
 		if block_byte != 0 and sides > 0 {
 	
 			#region Get blockstate ID
-			if block_floor < ceil(block/2) {
-			//This is the second state.
+			if block_floor % 2 == 0 {
+			//This is the second state. Even.
 		
-			var blockstate = string_copy(string(int_to_binary(block_state_byte, 8)), 3, 4)
-			var blockstate = binary_to_int(blockstate)
+			//var blockstate = string_copy(string(int_to_binary(block_state_byte, 8)), 3, 4)
+			//var blockstate = binary_to_int(blockstate)
+			blockstate = block_state_byte & 0xf
 			} else { 
 			//This is the first state.	
 			
-				var blockstate = string_copy(string(int_to_binary(block_state_byte, 8)), 0, 4)
-				var blockstate = binary_to_int(blockstate)
+				//var blockstate = string_copy(string(int_to_binary(block_state_byte, 8)), 0, 4)
+				//var blockstate = binary_to_int(blockstate)
+				blockstate = block_state_byte >> 4
 				} 
+			
+			  //if block_id_index % 2 == 0
+				//blockstate = buffer_seek(blockstatedata, floor(block / 2] >> 4
+				// } else
+			   //blockstate = blocks[floor(block / 2)] & 0xf
+				//}
 			
 		#endregion
 		
@@ -137,11 +145,13 @@ function parse_obj() {
 					var west = all_sides
 					}
 					
+			//blockstate+=3
 			
 			if all_sides = false {
 				//HANDLE THE TEXTURES LIST AND OBJECT
 				var i = 0
 				var temp_tex_face = up
+				
 				repeat 7 {
 					switch (i) {
 						case 0: temp_tex_face = up; break;
