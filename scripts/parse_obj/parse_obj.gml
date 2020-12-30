@@ -87,7 +87,7 @@ function parse_obj() {
 		#endregion
 		
 			//Get the block name, and state from its ID.
-			var block_name = ds_map_find_value(global.filter, string(block_byte))
+			block_name = ds_map_find_value(global.filter, string(block_byte))
 			var block_entry = global.pack_blocks[? block_name]
 			
 			var blockshape = block_entry[? "blockshape"]
@@ -110,6 +110,8 @@ function parse_obj() {
 					west = false
 					south = false
 					}
+					
+				
 					
 				//Directional
 				if textures[? "north"] != undefined {
@@ -155,10 +157,17 @@ function parse_obj() {
 				
 						var textures_states = json_get(global.pack_terrain_texture, "texture_data", temp_tex_face)
 							if is_string(textures_states) temp_tex_face = textures_states else {
-								temp_tex_face = json_get(textures_states, blockstate)
+								temp_tex_face = json_get(textures_states, "textures", blockstate)
+								if temp_tex_face = undefined temp_tex_face = json_get(textures_states, "textures", 0)
 								}
+								
+						if temp_tex_face = undefined temp_tex_face = json_get(textures_states, "textures")
+						
+						
 						
 						temp_tex_face = json_get(global.pack_resources, "resources", "textures", temp_tex_face)
+						
+						
 						
 						switch (i) {
 						case 0: up = temp_tex_face; break;
@@ -172,23 +181,58 @@ function parse_obj() {
 						}
 					i++
 					}
+				} else {
+							var textures_states = json_get(global.pack_terrain_texture, "texture_data", all_sides)
+							if is_string(textures_states) all_sides = textures_states else {
+								all_sides = json_get(textures_states, "textures", blockstate)
+								if all_sides = undefined all_sides = json_get(textures_states, "textures", 0)
+								}
+								
+							if all_sides = undefined all_sides = json_get(textures_states, "textures")
+						
+						
+							all_sides = json_get(global.pack_resources, "resources", "textures", all_sides)
+							
+							var up = all_sides
+							var down = all_sides
+							var side = all_sides
+			
+							var north = all_sides
+							var east = all_sides
+							var south = all_sides
+							var west = all_sides
+					}
+				
+			if north = false {
+				north = side
+				east = side
+				south = side
+				west = side
 				}
+				
+			blockshape = "basic"
 			
-			var block_json = textfile_copy_replace(ma_templates_directory + "blockshapes\\" + blockshape + ".json", "%up%", up, ma_templates_directory + "generated\\" + block_name + "_" + string(blockstate))
-			var block_json = textfile_copy_replace(ma_templates_directory + "blockshapes\\" + blockshape + ".json", "%down%", down, ma_templates_directory + "generated\\" + block_name + "_" + string(blockstate))
+		
+				
+			var output =  ma_templates_directory + "generated\\" + block_name + "_" + string(blockstate) + ".json"
 			
-			var block_json = textfile_copy_replace(ma_templates_directory + "blockshapes\\" + blockshape + ".json", "%west%", west, ma_templates_directory + "generated\\" + block_name + "_" + string(blockstate))
-			var block_json = textfile_copy_replace(ma_templates_directory + "blockshapes\\" + blockshape + ".json", "%east%", east, ma_templates_directory + "generated\\" + block_name + "_" + string(blockstate))
-			var block_json = textfile_copy_replace(ma_templates_directory + "blockshapes\\" + blockshape + ".json", "%north%", north, ma_templates_directory + "generated\\" + block_name + "_" + string(blockstate))
-			var block_json = textfile_copy_replace(ma_templates_directory + "blockshapes\\" + blockshape + ".json", "%south%", south, ma_templates_directory + "generated\\" + block_name + "_" + string(blockstate))
+			textfile_copy_replace(ma_templates_directory + "blockshapes\\" + blockshape + ".json", "%up%", up, output)
+			textfile_copy_replace(output, "%down%", down, output)
+			
+			textfile_copy_replace(output, "%west%", west, output)
+			textfile_copy_replace(output, "%east%", east, output)
+			textfile_copy_replace(output, "%north%", north, output)
+			textfile_copy_replace(output, "%south%", south, output)
 			
 			
-			mc2obj_model(x_lines_done,y_lines_done,z_lines_done,block_json,text_file_buffer,vertice_count, vertice_texture_count,bds,mtloutput,mat_map)
+			textfile_copy_replace(output, "%pack%", global.current_resource_pack, output)
+			
+			mc2obj_model(x_lines_done,y_lines_done,z_lines_done,output,text_file_buffer,vertice_count, vertice_texture_count,bds,mtloutput,mat_map)
 			
 			
 			var leaf_sides = -1
-			if string_pos("leaves", current_block_name) > 0 and leaf_sides > 0 and ds_list_find_index(ds_map_find_value(obj_gui.export_options_values, "selected"), 2) > -1 {
-				var leaf_id = string_replace(current_block_name, "dungeonmaster:LEVELNAME/", "") + "_outer"
+			if string_pos("leaves", block_name) > 0 and leaf_sides > 0 and ds_list_find_index(ds_map_find_value(obj_gui.export_options_values, "selected"), 2) > -1 {
+				var leaf_id = string_replace(block_name, "dungeonmaster:LEVELNAME/", "") + "_outer"
 				if !ds_map_exists(mat_map, leaf_id) {
 				ds_map_add(mat_map, leaf_id, leaf_id)
 				mc2obj_mtl(mtloutput, mat_map, leaf_id, global.current_resource_pack + "\\images\\blocks\\" + leaf_id + ".png")
@@ -206,8 +250,7 @@ function parse_obj() {
 		} else {
 			blocks_skipped++
 			if block_byte = 0 air_blocks_skipped++
-			current_block = "air"
-			current_block_name = "air"
+			block_name = "air"
 			}
 	
 	//if ds_map_find_first(bds) != undefined {

@@ -122,12 +122,12 @@ function mc2obj_model(bx, by, bz, json, buffer, v_count, vt_count, cullfaces, mt
 			
 			//Material		
 			if string_pos("dungeons", textures[? texture_temp]) > 0 { 
-				var texture_path = string_replace_all(textures[? texture_temp], "dungeons", ma_resourcepacks) + ".png"
+				var texture_path = string_replace_all(textures[? texture_temp], "dungeons:", ma_resourcepacks)// + ".png"
 				
 				mc2obj_mtl(mtl, mtl_index, textures[? texture_temp], texture_path)
 				}		
 			if string_pos("minecraft", textures[? texture_temp]) > 0 { 
-				var texture_path = string_replace_all(textures[? texture_temp], "minecraft", ma_textures_directory) + ".png"
+				var texture_path = string_replace_all(textures[? texture_temp], "minecraft:", ma_textures_directory) + ".png"
 				
 				mc2obj_mtl(mtl, mtl_index, textures[? texture_temp], texture_path)
 				}
