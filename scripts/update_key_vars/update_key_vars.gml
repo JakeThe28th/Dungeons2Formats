@@ -15,7 +15,6 @@ if global.current_level != level_name {
 	instance_create_depth(0, 0, 1, obj_load_level)
 	ds_map_destroy(ds)
 	
-	global.level_json = obj_load_level.json
 	ds = json_get(json_load(ma_lovika + "objectgroups\\" + json_get(global.level_json, "object-groups", global.selected_group) + ".json"), "objects")
 	
 	

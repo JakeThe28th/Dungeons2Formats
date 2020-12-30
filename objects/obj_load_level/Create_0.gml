@@ -3,6 +3,7 @@
 dir = ma_lovika + "levels\\" + global.current_level + ".json"
 	json_txt = file_text_open_read(dir)
 	json_string = ""
+	json = -1
 
 	repeat 6 file_text_readln(json_txt) //Bypass mojang's comment
 	
@@ -19,5 +20,8 @@ dir = ma_lovika + "levels\\" + global.current_level + ".json"
 	global.pack_resources = json_load(ma_resourcepacks + global.current_resource_pack + "\\resources.json")
 	global.pack_terrain_texture = json_load(ma_resourcepacks + global.current_resource_pack + "\\images\\terrain_texture.json")
 	
+	global.level_json = json
 				
-	debug_log("INFO", "Finished loading level.")	
+	debug_log("INFO", "Finished loading level.")
+	
+	instance_destroy()

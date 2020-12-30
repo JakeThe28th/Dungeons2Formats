@@ -16,9 +16,9 @@
 		
 		//Split block data and block states into seperate buffers
 		blockdata = buffer_create(xsize*ysize*zsize, buffer_fixed, 1)
-		blockstatedata = buffer_create(xsize*ysize*zsize/2, buffer_fixed, 1)
+		blockstatedata = buffer_create((xsize*ysize*zsize)/2, buffer_fixed, 1)
 			buffer_copy(block_buffer_decompressed, 0, xsize*ysize*zsize, blockdata, 0)
-			buffer_copy(block_buffer_decompressed, xsize*ysize*zsize, xsize*ysize*zsize*1.5, blockstatedata, 0)
+			buffer_copy(block_buffer_decompressed, xsize*ysize*zsize, (xsize*ysize*zsize)/2, blockstatedata, 0)
 
 		//Delete the temporary buffers.
 		buffer_delete(block_buffer_compressed)
