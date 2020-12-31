@@ -62,15 +62,17 @@ function mc2obj_model(bx, by, bz, json, buffer, v_count, vt_count, cullfaces, mt
 		if json_ds[? "parent"] !=undefined {
 		//Set the parent to the current DS. Will be overwritten in loop
 		var parent = json_ds
+		var loaded_temp = 0
 		do {
 			
 			//Load parent
 			if parent[? "parent"] != undefined and parent[? "parent"] != "block/block" {
 				var parent = json_load(ma_models_directory + string_replace(parent[? "parent"], "minecraft:","")+".json")
+				var loaded_temp = 1
 					}
 			
 			//Replace the json's elements with the parent's elements.
-			if parent[? "elements"] !=undefined { 
+			if parent[? "elements"] !=undefined and loaded_temp	= 1 { 
 				ds_map_delete(json_ds, "elements")
 			
 				ds_map_add_list(json_ds, "elements", parent[? "elements"])
@@ -463,7 +465,7 @@ function mc2obj_model(bx, by, bz, json, buffer, v_count, vt_count, cullfaces, mt
 	vertice_count = v_count
 	vertice_texture_count = vt_count
 	
-	ds_map_destroy(parent) //Can't delete earlier due to json deleting it's children
+	if json_ds[? "parent"] !=undefined ds_map_destroy(parent) //Can't delete earlier due to json deleting it's children
 	ds_map_destroy(json_ds)
 	
 	
