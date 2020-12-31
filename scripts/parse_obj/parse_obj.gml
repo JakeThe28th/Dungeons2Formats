@@ -7,14 +7,14 @@ function parse_obj() {
 
 		//Get block
 		var block = (x_lines_done + (xsize*z_lines_done) + ((zsize*xsize)*y_lines_done)) -1
+		//var block = (x_lines_done + (xsize*z_lines_done) + ((zsize*xsize)*y_lines_done))
 		buffer_seek(blockdata, buffer_seek_start, block)
-	
-		//Get blockstate
-		var block_floor = floor(block/2)
-		buffer_seek(blockstatedata, buffer_seek_start, block_floor)
-	
-		//Read bytes
 		var block_byte = buffer_read(blockdata, buffer_u8)
+		
+		//Get state
+		var block_floor = floor(block/2)
+		//if block_floor <= 0 block_floor = floor(block/2)
+		buffer_seek(blockstatedata, buffer_seek_start, block_floor)
 		var block_state_byte = buffer_read(blockstatedata, buffer_u8)
 		
 		#region Culling map.
@@ -69,27 +69,30 @@ function parse_obj() {
 		}
 		#endregion
 		
-		if block_byte != 0 and sides > 0 {
-	
+		if block_byte != 0 and sides > 0 { 
 			#region Get blockstate ID
 			if block_floor % 2 == 0 {
 			//This is the second state. Even.
 		
-			//var blockstate = string_copy(string(int_to_binary(block_state_byte, 8)), 3, 4)
-			//var blockstate = binary_to_int(blockstate)
-			blockstate = block_state_byte & 0xf
+			var blockstate = string_copy(string(int_to_binary(block_state_byte, 8)), 5, 4)
+			var blockstate = binary_to_int(blockstate)
+			//blockstate = block_state_byte >> 4
+			//blockstate = block_state_byte & 240
 			} else { 
 			//This is the first state.	
 			
-				//var blockstate = string_copy(string(int_to_binary(block_state_byte, 8)), 0, 4)
-				//var blockstate = binary_to_int(blockstate)
-				blockstate = block_state_byte >> 4
+				var blockstate = string_copy(string(int_to_binary(block_state_byte, 8)), 1, 4)
+				var blockstate = binary_to_int(blockstate)
+				
+				//blockstate = block_state_byte & 15 //0xf
+				//blockstate = block_state_byte << 4
+				//blockstate = blockstate >> 4
 				} 
 			
 			  //if block_id_index % 2 == 0
 				//blockstate = buffer_seek(blockstatedata, floor(block / 2] >> 4
 				// } else
-			   //blockstate = blocks[floor(block / 2)] & 0xf
+			   //blockstate = blocks[floor(block / 2) & 0xf
 				//}
 			
 		#endregion

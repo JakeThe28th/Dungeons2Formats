@@ -11,13 +11,15 @@ function mc2obj_check_transparent(xoffset, yoffset, zoffset) {
 
 	#region Read the block's ID
 		var block_sur = (tmp_x + (xsize*tmp_z) + ((zsize*xsize)*tmp_y)) -1
-		if tmp_x > xsize return 1
-		if tmp_y > ysize return 1
-		if tmp_z > zsize return 1
+		if tmp_x >= xsize return 1
+		if tmp_y >= ysize return 1
+		if tmp_z >= zsize return 1
 		if tmp_x < 0 return 1
 		if tmp_y < 0 return 1
 		if tmp_z < 0 return 1
 		if block_sur < 0 return 1
+		
+		buffer_seek(blockdata, buffer_seek_start, block_sur)
 
 		//Read bytes
 		var block_sur_byte = buffer_read(blockdata, buffer_u8)
