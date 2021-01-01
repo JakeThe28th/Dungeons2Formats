@@ -215,9 +215,12 @@ function gui_draw_dropdown(x1, y1, x2, y2, ds, values, text, menu) {
 	repeat(ds_list_size(ds)) { if string_width(ds[| i]) > maxstringwidth maxstringwidth = string_width(ds[| i]); i++ }
 	
 	//Set the dimensions to fit the text.
-	open_y2 = y1 + ((string_height(ds[| 0])+10)*ds_list_size(ds)) + 10
-	//if open_y2 < y2+300 open_x2 = x1+ maxstringwidth +30
+	open_y2 = clamp(y2 + ((string_height(ds[| 1])+10)*ds_list_size(ds)) + 10, 25, vh-100)
+	//if open_y2 < y2+300 
 	
+	if (x1+ maxstringwidth +30) > open_x2 open_x2 = (x1+ maxstringwidth +30)
+	
+	//if open_x2 < maxstringwidth open_x2 = maxstringwidth
 	if open_x2 < x2 open_x2 = x2
 	
 	//Transition

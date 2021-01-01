@@ -215,7 +215,7 @@ function parse_obj() {
 				west = side
 				}
 				
-			blockshape = "basic"
+			//blockshape = "basic"
 			
 		
 				
