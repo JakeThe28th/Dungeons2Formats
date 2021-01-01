@@ -1,4 +1,4 @@
-	
+
 		if is_undefined(global.selected_object) {
 			show_error("You need to select a tile first", false)
 			instance_destroy()
@@ -7,25 +7,16 @@
 		//Get the block buffers
 		var blockstring = json_get(global.group_json, "objects", global.selected_object, "blocks") //Open
 		var block_buffer_compressed = buffer_base64_decode(blockstring) //Base64 decode
-		var block_buffer_decompressed = buffer_decompress(block_buffer_compressed) //Decompress
+		var blockdata = buffer_decompress(block_buffer_compressed) //Decompress
 		
 		//Get the size of the structure
 		xsize = json_get(global.group_json, "objects", global.selected_object, "size", 0)
 		ysize = json_get(global.group_json, "objects", global.selected_object, "size", 1)
 		zsize = json_get(global.group_json, "objects", global.selected_object, "size", 2)
 		
-		//blockdata = buffer_decompress(block_buffer_compressed) //Decompress
-		
-		//Split block data and block states into seperate buffers
-		blockdata = buffer_create(xsize*ysize*zsize, buffer_grow, 1)
-		blockstatedata = buffer_create((xsize*ysize*zsize)/2, buffer_grow, 1)
-			buffer_copy(block_buffer_decompressed, 0, xsize*ysize*zsize, blockdata, 0)
-			buffer_copy(block_buffer_decompressed, xsize*ysize*zsize, (xsize*ysize*zsize)/2, blockstatedata, 0)
 
 		//Delete the temporary buffers.
 		buffer_delete(block_buffer_compressed)
-		buffer_delete(block_buffer_decompressed)
-		
 		
 		i = 0
 		blocks_total = xsize*ysize*zsize
@@ -49,7 +40,6 @@ outputfilename = get_save_filename("obj files|*.obj", "")
 if outputfilename = "" {
 	
 	buffer_delete(blockdata)
-	buffer_delete(blockstatedata)
 	obj_gui.grayed_out_buttons = false
 	
 	instance_destroy()

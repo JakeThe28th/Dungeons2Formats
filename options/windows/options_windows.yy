@@ -1,7 +1,7 @@
 {
   "option_windows_display_name": "Minecraft Dungeons Level Viewer",
   "option_windows_executable_name": "${project_name}",
-  "option_windows_version": "2.3.0.0",
+  "option_windows_version": "2.4.1.0",
   "option_windows_company_info": "4FS",
   "option_windows_product_info": "MC:D Level Viewer",
   "option_windows_copyright_info": "(c) 2020 4FS",

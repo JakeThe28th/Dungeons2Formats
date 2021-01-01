@@ -14,9 +14,10 @@ function parse_obj() {
 		//Get state
 		var block_floor = floor(block/2)
 		//if block_floor <= 0 block_floor = floor(block/2)
-		buffer_seek(blockstatedata, buffer_seek_start, block_floor)
-		var block_state_byte = buffer_read(blockstatedata, buffer_u8)
+		buffer_seek(blockdata, buffer_seek_start, blocks_total + block_floor)
+		var block_state_byte = buffer_read(blockdata, buffer_u8)
 		
+		if block_floor = 21023403939 {
 		#region Culling map.
 		if block_byte != 0 {
 			//If the current block's ID isn't 0 (Air)
@@ -67,39 +68,30 @@ function parse_obj() {
 			#endregion
 			} else sides = 1
 		}
-		#endregion
+		#endregion		
+		}
+		var sides = 2
 		
 		if block_byte != 0 and sides > 0 { 
+			
 			#region Get blockstate ID
-			if block_floor % 2 == 0 {
-			//This is the second state. Even.
-		
-			var blockstate = string_copy(string(int_to_binary(block_state_byte, 8)), 5, 4)
+			
+			if block % 2 == 0 {
+			//This is the first state. Even.
+			var blockstate = string_copy(string(int_to_binary(block_state_byte, 8)), 1, 4)
 			var blockstate = binary_to_int(blockstate)
-			//blockstate = block_state_byte >> 4
-			//blockstate = block_state_byte & 240
 			} else { 
-			//This is the first state.	
-			
-				var blockstate = string_copy(string(int_to_binary(block_state_byte, 8)), 1, 4)
+			//This is the second state.	
+				var blockstate = string_copy(string(int_to_binary(block_state_byte, 8)), 5, 4)
 				var blockstate = binary_to_int(blockstate)
-				
-				//blockstate = block_state_byte & 15 //0xf
-				//blockstate = block_state_byte << 4
-				//blockstate = blockstate >> 4
 				} 
-			
-			  //if block_id_index % 2 == 0
-				//blockstate = buffer_seek(blockstatedata, floor(block / 2] >> 4
-				// } else
-			   //blockstate = blocks[floor(block / 2) & 0xf
-				//}
-			
+		
 		#endregion
 		
 			//Get the block name, and state from its ID.
 			block_name = ds_map_find_value(global.filter, string(block_byte))
 			var block_entry = global.pack_blocks[? block_name]
+			
 			
 			var blockshape = block_entry[? "blockshape"]
 			if blockshape = undefined blockshape = "basic"
@@ -223,7 +215,7 @@ function parse_obj() {
 				west = side
 				}
 				
-			//blockshape = "basic"
+			blockshape = "basic"
 			
 		
 				

@@ -41,7 +41,7 @@ if p = "done" {
 	debug_log("MC2OBJ", "Average Non-Air block time: " + string(end_time / blocks_created+(blocks_skipped-air_blocks_skipped)))
 
 	buffer_delete(blockdata)
-	buffer_delete(blockstatedata)
+	//buffer_delete(blockstatedata)
 	obj_gui.grayed_out_buttons = false
 	
 	instance_destroy()

@@ -17,5 +17,7 @@ function mc2obj_increment_block(){
 		return "done"
 		}
 	
+	if blocks_done = blocks_total return "done"
 	blocks_done ++
+	
 }
