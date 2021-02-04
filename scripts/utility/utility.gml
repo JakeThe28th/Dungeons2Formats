@@ -109,7 +109,10 @@ function util_ds_path(ds, seperator, path, type) {
 	
 function textfile_copy_replace(file_, phrase, newphrase, output_) {
 	
-	if !file_exists(file_) debug_log("ERROR", "Missing text file: " + file_)
+	if !file_exists(file_) {
+		debug_log("ERROR", "Missing text file: " + file_)
+		return -1
+		}
 	
 	var file = file_text_open_read(file_)
 	var output = file_text_open_write(output_)

@@ -1,4 +1,7 @@
-Thanks to Tastac, IP, and Ocelot for providing help, and conversion maps! (Without them i wouldn't even know how to read block data!)
+Thanks to Tastac, IP, and Ocelot! (Without them i wouldn't even know how to read block data!)
 Thanks to CCCode for giving me the dungeons bushy leaves model!
+
+The block map i'm using:
+https://github.com/Dokucraft/Dungeons-Level-Format/blob/master/docs/Block_IDs.md
 
 File.dll was made by david norgren and is from mine-imator.

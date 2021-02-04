@@ -7,7 +7,7 @@
 		//Get the block buffers
 		var blockstring = json_get(global.group_json, "objects", global.selected_object, "blocks") //Open
 		var block_buffer_compressed = buffer_base64_decode(blockstring) //Base64 decode
-		var blockdata = buffer_decompress(block_buffer_compressed) //Decompress
+		blockdata = buffer_decompress(block_buffer_compressed) //Decompress
 		
 		//Get the size of the structure
 		xsize = json_get(global.group_json, "objects", global.selected_object, "size", 0)

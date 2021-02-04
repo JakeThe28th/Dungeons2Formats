@@ -17,7 +17,6 @@ function parse_obj() {
 		buffer_seek(blockdata, buffer_seek_start, blocks_total + block_floor)
 		var block_state_byte = buffer_read(blockdata, buffer_u8)
 		
-		if block_floor = 21023403939 {
 		#region Culling map.
 		if block_byte != 0 {
 			//If the current block's ID isn't 0 (Air)
@@ -69,8 +68,6 @@ function parse_obj() {
 			} else sides = 1
 		}
 		#endregion		
-		}
-		var sides = 2
 		
 		if block_byte != 0 and sides > 0 { 
 			
@@ -220,6 +217,8 @@ function parse_obj() {
 		
 				
 			var output =  ma_templates_directory + "generated\\" + block_name + "_" + string(blockstate) + ".json"
+			
+			if !file_exists(ma_templates_directory + "blockshapes\\" + blockshape + ".json") blockshape = "basic"
 			
 			textfile_copy_replace(ma_templates_directory + "blockshapes\\" + blockshape + ".json", "%up%", up, output)
 			textfile_copy_replace(output, "%down%", down, output)

@@ -4,8 +4,8 @@ function macros() {
 #macro performance_mode false
 
 //#macro ma_directory working_directory
-#macro ma_directory "C:\\Users\\nickl\\AppData\\Local\\Dungeons_Objectgroup_Reader__GMS2_3_\\"
-//#macro ma_directory program_directory
+//#macro ma_directory "C:\\Users\\nickl\\AppData\\Local\\Dungeons_Objectgroup_Reader__GMS2_3_\\"
+#macro ma_directory program_directory
 #macro ma_blockstates_directory ma_directory + "data_mc\\blockstates\\"
 #macro ma_models_directory ma_directory + "data_mc\\models\\"
 #macro ma_textures_directory ma_directory + "data_mc\\textures\\"
@@ -18,7 +18,7 @@ function macros() {
 #macro ma_log ma_directory + "log.txt"
 
 #macro ma_json_directory ma_directory + "generated\\"
-#macro ma_filters ma_directory + "filters\\"
+#macro ma_filter ma_directory + "filter.json"
 
 #macro ma_templates_directory ma_directory + "templates\\"
 
@@ -34,14 +34,16 @@ if !directory_exists(ma_resourcepacks) directory_create(ma_resourcepacks)
 
 if !directory_exists(ma_json_directory) directory_create(ma_json_directory)
 
-if !directory_exists(ma_templates_directory) directory_create(ma_templates_directory)
+if !directory_exists(ma_templates_directory) {
+	directory_create(ma_templates_directory);
+	zip_unzip("templates.zip", ma_templates_directory); 
+	}
 
-if !directory_exists(ma_filters) {
-	directory_create(ma_filters);
-	zip_unzip("basefilters.zip", ma_filters); 
+if !file_exists(ma_filter) {
+	file_copy("filter.json", ma_directory + "filter.json")
 	do { 
 		//Nothing
-		} until file_exists(ma_filters + "default.json")
+		} until file_exists(ma_filter)
 	}
 
 
