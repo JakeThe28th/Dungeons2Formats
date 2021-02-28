@@ -206,7 +206,7 @@ function gui_draw_dropdown(x1, y1, x2, y2, ds, values, text, menu) {
 		}
 		
 	//Temporary dimensions
-	var open_y2 = vh-100
+	var open_y2 = vh-10
 	var open_x2 = x1+(180*2)
 	
 	//Get widest entry from DS list
@@ -215,7 +215,7 @@ function gui_draw_dropdown(x1, y1, x2, y2, ds, values, text, menu) {
 	repeat(ds_list_size(ds)) { if string_width(ds[| i]) > maxstringwidth maxstringwidth = string_width(ds[| i]); i++ }
 	
 	//Set the dimensions to fit the text.
-	open_y2 = clamp(y2 + ((string_height(ds[| 1])+10)*ds_list_size(ds)) + 10, 25, vh-100)
+	open_y2 = clamp(y2 + ((string_height(ds[| 1])+10)*ds_list_size(ds)) + 10, 25, vh-10)
 	//if open_y2 < y2+300 
 	
 	if (x1+ maxstringwidth +30) > open_x2 open_x2 = (x1+ maxstringwidth +30)

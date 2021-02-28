@@ -22,6 +22,10 @@
 		blocks_total = xsize*ysize*zsize
 		blocks_done = 1
 		
+		//As of flames of the nether, the block format is either 1 byte per block or 2 bytes per block.
+		current_id_scale = 1 //! byte
+		if blocks_total*2 < buffer_get_size(blockdata) current_id_scale = 2 //If blocks*2 is less than the buffer size, new format, otherwise, old.
+		
 		x_lines_done = 1
 		y_lines_done = 0
 		z_lines_done = 0

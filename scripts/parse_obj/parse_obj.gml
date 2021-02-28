@@ -4,7 +4,7 @@ function parse_obj() {
 
 		dungeons_id = 0
 
-
+		if current_id_scale = 1 {
 		//Get block
 		var block = (x_lines_done + (xsize*z_lines_done) + ((zsize*xsize)*y_lines_done)) -1
 		//var block = (x_lines_done + (xsize*z_lines_done) + ((zsize*xsize)*y_lines_done))
@@ -16,6 +16,20 @@ function parse_obj() {
 		//if block_floor <= 0 block_floor = floor(block/2)
 		buffer_seek(blockdata, buffer_seek_start, blocks_total + block_floor)
 		var block_state_byte = buffer_read(blockdata, buffer_u8)
+		
+		} else {
+			//Get block
+			var block = (x_lines_done + (xsize*z_lines_done) + ((zsize*xsize)*y_lines_done)) -1
+			//var block = (x_lines_done + (xsize*z_lines_done) + ((zsize*xsize)*y_lines_done))
+			buffer_seek(blockdata, buffer_seek_start, block*2)
+			var block_byte = buffer_read(blockdata, buffer_u16)
+		
+			//Get state
+			var block_floor = floor(block/2)
+			//if block_floor <= 0 block_floor = floor(block/2)
+			buffer_seek(blockdata, buffer_seek_start, blocks_total*2 + block_floor)
+			var block_state_byte = buffer_read(blockdata, buffer_u8)
+			}
 		
 		#region Culling map.
 		if block_byte != 0 {
@@ -69,10 +83,14 @@ function parse_obj() {
 		}
 		#endregion		
 		
+		
+		
 		if block_byte != 0 and sides > 0 { 
 			
 			#region Get blockstate ID
 			
+			//if current_id_scale = 1 {
+				
 			if block % 2 == 0 {
 			//This is the first state. Even.
 			var blockstate = string_copy(string(int_to_binary(block_state_byte, 8)), 1, 4)
@@ -82,11 +100,16 @@ function parse_obj() {
 				var blockstate = string_copy(string(int_to_binary(block_state_byte, 8)), 5, 4)
 				var blockstate = binary_to_int(blockstate)
 				} 
+				
+			//} else {
+			//	blockstate = block_state_byte
+			//	}
 		
 		#endregion
 		
 			//Get the block name, and state from its ID.
 			block_name = ds_map_find_value(global.filter, string(block_byte))
+			if block_name = undefined block_name =ds_map_find_value(global.filter, string(1))
 			var block_entry = global.pack_blocks[? block_name]
 			
 			

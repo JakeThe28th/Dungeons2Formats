@@ -2,9 +2,19 @@
 // https://help.yoyogames.com/hc/en-us/articles/360005277377 for more information
 function update_group(group_entry) {
 	if group_entry != global.selected_group or prevlevel != global.current_level {
+		
 	global.selected_group = group_entry
 	ds = json_get(json_load(ma_lovika + "objectgroups\\" + json_get(global.level_json, "object-groups", global.selected_group) + ".json"), "objects")
 	global.group_json = json_load(ma_lovika + "objectgroups\\" + json_get(global.level_json, "object-groups", global.selected_group) + ".json")
+	
+	if ds = undefined {
+		ds = json_decode("[{\"blocks\" : \"aaaa\",\"pos\" : [ 0, 0, 0 ],\"id\" : \"Failed to load.\",\"size\" : [ 1, 1, 1 ],}]")[? "default"]
+		//global.current_level = prevlevel
+		//update_level(global.current_level)
+		//update_group(group_entry)
+		//show_message("Failed to load.")
+		return -1
+		}
 	}
 }
 
